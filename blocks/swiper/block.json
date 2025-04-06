@@ -1,0 +1,14 @@
+{
+    "apiVersion": 2,
+    "name": "amjl/swiper",
+    "title": "Swiper Slider",
+    "category": "media",
+    "icon": "images-alt2",
+    "description": "Ein datenschutzfreundlicher Swiper-Slider mit lokalem JS.",
+    "keywords": ["slider", "carousel", "swiper"],
+    "version": "1.0.0",
+    "textdomain": "wp-amjl-custom-blocks",
+    "editorScript": "file:../../build/swiper/index.js",
+    "editorStyle": "file:../../build/swiper/style-index.css",
+    "style": "file:../../build/swiper/style-index.css"
+  }  

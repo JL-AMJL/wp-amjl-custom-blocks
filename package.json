@@ -1,0 +1,28 @@
+{
+  "name": "wp-amjl-custom-blocks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "wp-scripts build blocks/swiper/index.js --output-path=build/swiper",
+    "start": "wp-scripts start blocks/swiper/index.js --output-path=build/swiper"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JL-AMJL/wp-amjl-custom-blocks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JL-AMJL/wp-amjl-custom-blocks/issues"
+  },
+  "homepage": "https://github.com/JL-AMJL/wp-amjl-custom-blocks#readme",
+  "description": "",
+  "devDependencies": {
+    "@wordpress/scripts": "^30.14.1"
+  },
+  "dependencies": {
+    "swiper": "^11.2.6"
+  }
+}

@@ -1,0 +1,13 @@
+@import "../../css/swiper-bundle.min.css";
+
+// Optional: eigene Styles
+.swiper-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.swiper-slide {
+  padding: 1rem;
+  background: #f89a9a;
+  border: 1px dashed #750bff;
+}
