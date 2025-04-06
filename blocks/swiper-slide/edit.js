@@ -5,7 +5,10 @@ export default function Edit() {
 
 	return (
 		<div {...blockProps}>
-			<InnerBlocks />
+			<InnerBlocks
+				template={[['core/paragraph', { placeholder: 'Slide-Inhalt hier…' }]]}
+				templateLock={false}
+			/>
 		</div>
 	);
 }

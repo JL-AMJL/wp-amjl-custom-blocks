@@ -29,11 +29,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Edit() {
-  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)();
-  const swiperRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
+  const wrapperRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
+  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
+    className: 'swiper swiper-container'
+  });
+  const slideTemplate = [['amjl/swiper-slide', {}, [['core/paragraph', {
+    placeholder: 'Text für Slide 1'
+  }]]], ['amjl/swiper-slide', {}, [['core/paragraph', {
+    placeholder: 'Text für Slide 2'
+  }]]]];
+  const innerBlocksProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useInnerBlocksProps)({
+    className: 'swiper-wrapper'
+  }, {
+    allowedBlocks: ['amjl/swiper-slide'],
+    template: slideTemplate,
+    templateLock: false
+  });
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     console.log('📦 useEffect läuft');
-    const el = swiperRef.current;
+    const el = wrapperRef.current;
     if (el && !el.classList.contains('swiper-initialized')) {
       console.log('🚀 Initialisiere Swiper');
       new swiper__WEBPACK_IMPORTED_MODULE_3__["default"](el, {
@@ -42,22 +56,11 @@ function Edit() {
       });
     }
   }, []);
-  const slideTemplate = [['amjl/swiper-slide', {}, [['core/paragraph', {
-    placeholder: 'Text für Slide 1'
-  }]]], ['amjl/swiper-slide', {}, [['core/paragraph', {
-    placeholder: 'Text für Slide 2'
-  }]]]];
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
     ...blockProps,
-    className: "swiper swiper-container",
-    ref: swiperRef,
+    ref: wrapperRef,
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
-      className: "swiper-wrapper",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InnerBlocks, {
-        allowedBlocks: ['amjl/swiper-slide'],
-        template: slideTemplate,
-        templateLock: false
-      })
+      ...innerBlocksProps
     })
   });
 }
