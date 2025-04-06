@@ -1,0 +1,16 @@
+{
+    "apiVersion": 2,
+    "name": "amjl/swiper-slide",
+    "title": "Swiper Slide",
+    "category": "design",
+    "parent": ["amjl/swiper"],
+    "icon": "slides",
+    "description": "Ein einzelner Slide im Swiper Slider.",
+    "supports": {
+      "reusable": false
+    },
+    "textdomain": "wp-amjl-custom-blocks",
+    "editorScript": "file:../../build/swiper-slide.js",
+    "editorStyle": "file:../../build/style-swiper-slide.css",
+    "style": "file:../../build/style-swiper-slide.css"
+}  

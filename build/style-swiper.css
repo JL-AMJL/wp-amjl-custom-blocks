@@ -2,12 +2,20 @@
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./blocks/swiper/style.scss ***!
   \*************************************************************************************************************************************************************************************************************************************************/
 .swiper-container {
-  width: 100%;
   overflow: hidden;
+  width: 100%;
+}
+
+.swiper-wrapper {
+  display: flex;
 }
 
 .swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+  border: 1px dashed #aaa;
+  background: #f8f8f8;
   padding: 1rem;
-  background: #f89a9a;
-  border: 1px dashed #750bff;
 }
+
+/*# sourceMappingURL=style-swiper.css.map*/

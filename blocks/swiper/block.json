@@ -8,7 +8,11 @@
     "keywords": ["slider", "carousel", "swiper"],
     "version": "1.0.0",
     "textdomain": "wp-amjl-custom-blocks",
-    "editorScript": "file:../../build/swiper/index.js",
-    "editorStyle": "file:../../build/swiper/style-index.css",
-    "style": "file:../../build/swiper/style-index.css"
+    "editorScript": "file:../../build/swiper.js",
+    "editorStyle": "file:../../build/style-swiper.css",
+    "style": "file:../../build/style-swiper.css",
+    "supports": {
+        "reusable": false
+      },
+      "innerBlocks": ["amjl/swiper-slide"]
   }  

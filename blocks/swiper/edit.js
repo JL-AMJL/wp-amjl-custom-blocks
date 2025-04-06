@@ -1,51 +1,44 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
-import { useEffect } from '@wordpress/element';
-
-// Lokaler Swiper-Code
-import '../../js/swiper-bundle.min.js';
+import { useEffect, useRef } from '@wordpress/element';
+import Swiper from 'swiper';
+import 'swiper/css';
 
 export default function Edit() {
 	const blockProps = useBlockProps();
+    const swiperRef = useRef(null);
 
     useEffect(() => {
-		const container = document.querySelector('.wp-block-amjl-swiper .wiper');
-        
-        // Nur initialisieren, wenn Swiper global verfügbar ist
-		if (container && ! container.classList.contains('swiper-initialized')) {
-			new window.Swiper('.wp-block-amjl-swiper .swiper', {
-				slidesPerView: 1,
-				loop: false,
-			});
-		}
-	}, []);
-
+        console.log('📦 useEffect läuft');
+        const el = swiperRef.current;
+    
+        if (el && !el.classList.contains('swiper-initialized')) {
+            console.log('🚀 Initialisiere Swiper');
+            new Swiper(el, {
+                slidesPerView: 1,
+                loop: false,
+            });
+        }
+    }, []);
+    
 	const slideTemplate = [
-		[
-			'core/group',
-			{
-				className: 'swiper-slide',
-			},
-			[
-				['core/paragraph', { placeholder: __('Text für Slide 1', 'wp-amjl-custom-blocks') }],
-			],
-		],
-		[
-			'core/group',
-			{
-				className: 'swiper-slide',
-			},
-			[
-				['core/paragraph', { placeholder: __('Text für Slide 2', 'wp-amjl-custom-blocks') }],
-			],
-		],
-	];
+        [
+            'amjl/swiper-slide',
+            {},
+            [['core/paragraph', { placeholder: 'Text für Slide 1' }]]
+        ],
+        [
+            'amjl/swiper-slide',
+            {},
+            [['core/paragraph', { placeholder: 'Text für Slide 2' }]]
+        ]
+    ];
 
 	return (
-		<div {...blockProps} className="swiper swiper-container">
+		<div {...blockProps} className="swiper swiper-container" ref={swiperRef}>
 			<div className="swiper-wrapper">
 				<InnerBlocks
-					allowedBlocks={['core/group']}
+					allowedBlocks={['amjl/swiper-slide']}
 					template={slideTemplate}
 					templateLock={false}
 				/>

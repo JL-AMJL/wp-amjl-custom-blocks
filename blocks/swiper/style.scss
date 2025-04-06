@@ -1,13 +1,17 @@
-@import "../../css/swiper-bundle.min.css";
-
 // Optional: eigene Styles
 .swiper-container {
-  width: 100%;
-  overflow: hidden;
-}
-
-.swiper-slide {
-  padding: 1rem;
-  background: #f89a9a;
-  border: 1px dashed #750bff;
-}
+    overflow: hidden;
+    width: 100%;
+  }
+  
+  .swiper-wrapper {
+    display: flex;
+  }
+  
+  .swiper-slide {
+    flex-shrink: 0;
+    width: 100%;
+    border: 1px dashed #aaa;
+    background: #f8f8f8;
+    padding: 1rem;
+  }
