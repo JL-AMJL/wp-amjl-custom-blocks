@@ -11,8 +11,36 @@
     "editorScript": "file:../../build/swiper.js",
     "editorStyle": "file:../../build/style-swiper.css",
     "style": "file:../../build/style-swiper.css",
+    "script": "file:../../build/swiper-frontend.js",
     "supports": {
-        "reusable": false
+      "reusable": false
+    },
+    "attributes": {
+      "autoplay": {
+        "type": "boolean",
+        "default": false
       },
-      "innerBlocks": ["amjl/swiper-slide"]
-  }  
+      "autoplaySpeed": {
+        "type": "number",
+        "default": 3000
+      },
+      "isLoop": {
+        "type": "boolean",
+        "default": true
+      },
+      "slidesPerView": {
+        "type": "number",
+        "default": 1
+      },
+      "showNavigation": {
+        "type": "boolean",
+        "default": true
+      },
+      "showPagination": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "innerBlocks": ["amjl/swiper-slide"]
+  }
+  
