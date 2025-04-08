@@ -1,6 +1,6 @@
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
-Swiper.use([Navigation, Pagination]);
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+Swiper.use([Navigation, Pagination, Autoplay]);
 
 document.addEventListener('DOMContentLoaded', () => {
     const swiperElements = document.querySelectorAll('.swiper-container');

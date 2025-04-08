@@ -1,46 +1,74 @@
 {
-    "apiVersion": 2,
-    "name": "amjl/swiper",
-    "title": "Swiper Slider",
-    "category": "media",
-    "icon": "images-alt2",
-    "description": "Ein datenschutzfreundlicher Swiper-Slider mit lokalem JS.",
-    "keywords": ["slider", "carousel", "swiper"],
-    "version": "1.0.0",
-    "textdomain": "wp-amjl-custom-blocks",
-    "editorScript": "file:../../build/swiper.js",
-    "editorStyle": "file:../../build/style-swiper.css",
-    "style": "file:../../build/style-swiper.css",
-    "script": "file:../../build/swiper-frontend.js",
-    "supports": {
-      "reusable": false
+  "apiVersion": 2,
+  "name": "amjl/swiper",
+  "title": "Swiper Slider",
+  "category": "media",
+  "icon": "images-alt2",
+  "description": "Ein datenschutzfreundlicher Swiper-Slider mit lokalem JS.",
+  "keywords": ["slider", "carousel", "swiper"],
+  "version": "1.0.0",
+  "textdomain": "wp-amjl-custom-blocks",
+  "editorScript": "file:../../build/swiper.js",
+  "editorStyle": "file:../../build/style-swiper.css",
+  "style": "file:../../build/style-swiper.css",
+  "script": "file:../../build/swiper-frontend.js",
+  "supports": {
+    "reusable": false,
+    "anchor": true,
+    "align": true,
+    "layout": {
+      "allowSwitching": true,
+      "allowEditing": true,
+      "allowInheriting": true,
+      "allowSizingOnChildren": true,
+      "allowVerticalAlignment": true,
+      "allowJustification": true,
+      "allowOrientation": true,
+      "allowCustomContentAndWideSize": true
     },
-    "attributes": {
-      "autoplay": {
-        "type": "boolean",
-        "default": false
-      },
-      "autoplaySpeed": {
-        "type": "number",
-        "default": 3000
-      },
-      "isLoop": {
-        "type": "boolean",
-        "default": true
-      },
-      "slidesPerView": {
-        "type": "number",
-        "default": 1
-      },
-      "showNavigation": {
-        "type": "boolean",
-        "default": true
-      },
-      "showPagination": {
-        "type": "boolean",
-        "default": true
-      }
+    "dimensions": {
+      "minHeight":true
     },
-    "innerBlocks": ["amjl/swiper-slide"]
-  }
-  
+    "color": {
+      "text": true,
+      "background": true
+    },
+    "background": {
+      "backgroundImage": true,
+      "backgroundSize": true
+    },
+    "spacing": {
+      "padding": true,
+      "margin": true
+    },
+    "typography": true,
+    "shadow": true
+  },
+  "attributes": {
+    "autoplay": {
+      "type": "boolean",
+      "default": false
+    },
+    "autoplaySpeed": {
+      "type": "number",
+      "default": 3000
+    },
+    "isLoop": {
+      "type": "boolean",
+      "default": true
+    },
+    "slidesPerView": {
+      "type": "number",
+      "default": 1
+    },
+    "showNavigation": {
+      "type": "boolean",
+      "default": true
+    },
+    "showPagination": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "innerBlocks": ["amjl/swiper-slide"]
+}

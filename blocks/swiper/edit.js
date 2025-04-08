@@ -22,9 +22,11 @@ export default function Edit({ attributes, setAttributes }) {
 		]
 	], []);
 
-	const blockProps = useBlockProps({
-		className: `swiper swiper-container${showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}`
-	});
+	const baseProps = useBlockProps();
+	const blockProps = {
+		...baseProps,
+		className: `${baseProps.className} swiper swiper-container${showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}`
+	};
 	const innerBlocksProps = useInnerBlocksProps(
 		{ className: 'swiper-wrapper' },
 		{
