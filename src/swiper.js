@@ -1,1 +1,0 @@
-import '../blocks/swiper/index.js';

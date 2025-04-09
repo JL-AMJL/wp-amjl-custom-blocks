@@ -1,0 +1,7 @@
+@use 'swiper/swiper-bundle.css';
+@use './style-frontend.scss';
+
+// CUSTOM SWIPER EDITOR STYLES
+.wp-block-amjl-swiper .swiper-slide {
+    margin-block-start: auto !important;
+  }

@@ -8,14 +8,14 @@
   "keywords": ["slider", "carousel", "swiper"],
   "version": "1.0.0",
   "textdomain": "wp-amjl-custom-blocks",
-  "editorScript": "file:../../build/swiper.js",
-  "editorStyle": "file:../../build/style-swiper.css",
-  "style": "file:../../build/style-swiper.css",
+  "editorScript": "file:../../build/swiper-editor.js",
+  "editorStyle": "file:../../build/swiper-editor.css",
+  "style": "file:../../build/swiper-frontend.css",
   "script": "file:../../build/swiper-frontend.js",
   "supports": {
     "reusable": false,
     "anchor": true,
-    "align": true,
+    "align": ["wide", "full"],
     "layout": {
       "allowSwitching": true,
       "allowEditing": true,
@@ -30,21 +30,53 @@
       "minHeight":true
     },
     "color": {
-      "text": true,
-      "background": true
+      "gradients": true,
+      "heading": true,
+      "button": true,
+      "link": true,
+      "__experimentalDefaultControls": {
+        "text": true,
+        "background": true
+      }
     },
     "background": {
       "backgroundImage": true,
-      "backgroundSize": true
+      "backgroundSize": true,
+      "__experimentalDefaultControls": {
+        "backgroundImage": true
+      }
     },
     "spacing": {
+      "margin": ["top", "bottom"],
       "padding": true,
-      "margin": true
+      "__experimentalDefaultControls": {
+        "margin": true,
+        "padding": true
+      }
     },
-    "typography": true,
+    "__experimentalBorder": {
+      "color": true,
+      "radius": true,
+      "style": true,
+      "width": true,
+      "__experimentalDefaultControls": {
+        "color": true,
+        "radius": true,
+        "style": true,
+        "width": true
+      }
+    },
     "shadow": true
   },
   "attributes": {
+    "align": {
+      "type": "string",
+      "default": ""
+    },
+    "height": {
+      "type": "string",
+      "default": ""
+    },
     "autoplay": {
       "type": "boolean",
       "default": false
@@ -68,6 +100,18 @@
     "showPagination": {
       "type": "boolean",
       "default": true
+    },
+    "navigationPosition": {
+      "type": "string",
+      "default": "standard"
+    },
+    "navigationOffsetX": {
+      "type": "number",
+      "default": 0
+    },
+    "navigationOffsetY": {
+      "type": "number",
+      "default": 0
     }
   },
   "innerBlocks": ["amjl/swiper-slide"]

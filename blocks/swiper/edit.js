@@ -1,13 +1,35 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, useInnerBlocksProps, InspectorControls } from '@wordpress/block-editor';
 import { useEffect, useRef, useMemo } from '@wordpress/element';
-import { PanelBody, ToggleControl, TextControl, RangeControl } from '@wordpress/components';
+import { 
+	PanelBody,
+	ToggleControl,
+	SelectControl,
+	RangeControl,
+	__experimentalUnitControl as UnitControl,
+	__experimentalToggleGroupControl as ToggleGroupControl,
+	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
+	Tooltip
+} from '@wordpress/components';
+import { justifyStretch, alignLeft, alignRight, alignCenter } from '@wordpress/icons';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
 Swiper.use([Navigation, Pagination]);
 
 export default function Edit({ attributes, setAttributes }) {
-	const { autoplay, autoplaySpeed, isLoop, slidesPerView, showNavigation, showPagination } = attributes;
+	const { 
+		autoplay, 
+		autoplaySpeed, 
+		isLoop, 
+		slidesPerView, 
+		showNavigation, 
+		showPagination, 
+		align, 
+		height,
+		navigationPosition,
+		navigationOffsetX,
+		navigationOffsetY
+	} = attributes;
 
 	const slideTemplate = useMemo(() => [
 		[
@@ -22,11 +44,19 @@ export default function Edit({ attributes, setAttributes }) {
 		]
 	], []);
 
-	const baseProps = useBlockProps();
+	const style = {
+		...(height ? { height } : {}),
+		...(navigationOffsetX ? { '--swiper-navigation-sides-offset': `${navigationOffsetX}px` } : {}),
+		...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {})
+	};
+	
+	const baseProps = useBlockProps({ style });
+
 	const blockProps = {
 		...baseProps,
-		className: `${baseProps.className} swiper swiper-container${showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}`
+		className: `${baseProps.className} swiper swiper-container ${align}{showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}${navigationPosition ? ` nav-position-${navigationPosition}` : ''}`
 	};
+
 	const innerBlocksProps = useInnerBlocksProps(
 		{ className: 'swiper-wrapper' },
 		{
@@ -124,7 +154,36 @@ export default function Edit({ attributes, setAttributes }) {
 							max={10}
 						/>
 
-						<h3>{__('Navigation Einstellungen', 'wp-amjl-custom-blocks')}</h3>
+                        {/* Höhe */}
+						<UnitControl
+							label={__('Höhe', 'wp-amjl-custom-blocks')}
+							value={height}
+							onChange={(value) => setAttributes({ height: value })}
+							units={[
+								{ value: 'px', label: 'px' },
+								{ value: '%', label: '%' },
+								{ value: 'vh', label: 'vh' },
+								{ value: 'vw', label: 'vw' },
+								{ value: 'em', label: 'em' },
+								{ value: 'rem', label: 'rem' }
+							]}
+							isUnitSelectTabbable
+							__nextHasNoMarginBottom
+						/>
+
+						{/* Align Einstellungen (wide/full) */}
+						<SelectControl
+    						label={__('Ausrichtung', 'wp-amjl-custom-blocks')}
+    						value={align}
+    						onChange={(value) => setAttributes({ align: value })}
+    						options={[
+    							{ label: __('Standard', 'wp-amjl-custom-blocks'), value: '' },
+    							{ label: __('Breit (Wide)', 'wp-amjl-custom-blocks'), value: 'alignwide' },
+    							{ label: __('Vollbreite (Full)', 'wp-amjl-custom-blocks'), value: 'alignfull' }
+    						]}
+    					/>
+
+    					<h3>{__('Navigation Einstellungen', 'wp-amjl-custom-blocks')}</h3>
 
 						{/* Navigation Arrows Toggle */}
 						<ToggleControl
@@ -141,20 +200,48 @@ export default function Edit({ attributes, setAttributes }) {
 						/>
 					</div>
 				</PanelBody>
+				<PanelBody title={__('Navigation & Pagination', 'wp-amjl-custom-blocks')} initialOpen={false}>
+					<ToggleGroupControl
+						label={__('Position Presets', 'wp-amjl-custom-blocks')}
+						value={navigationPosition}
+						onChange={(value) => setAttributes({ navigationPosition: value })}
+						isBlock
+					>
+						<ToggleGroupControlOption value="standard" label="Standard" icon={justifyStretch} />
+						<ToggleGroupControlOption value="bottom-center" label="Unten Mitte" icon={alignCenter} />
+						<ToggleGroupControlOption value="bottom-left" label="Unten Links" icon={alignLeft}/>
+						<ToggleGroupControlOption value="bottom-right" label="Unten Rechts" icon= {alignRight}/>
+					</ToggleGroupControl>
+					<RangeControl
+						label={__('X-Verschiebung (px)', 'wp-amjl-custom-blocks')}
+						value={navigationOffsetX}
+						onChange={(value) => setAttributes({ navigationOffsetX: value })}
+						min={-200}
+						max={200}
+					/>
+					<RangeControl
+						label={__('Y-Verschiebung (px)', 'wp-amjl-custom-blocks')}
+						value={navigationOffsetY}
+						onChange={(value) => setAttributes({ navigationOffsetY: value })}
+						min={-200}
+						max={200}
+					/>
+				</PanelBody>
 			</InspectorControls>
 
 			{/* Swiper Block Rendering */}
+			
 			<div {...blockProps} ref={wrapperRef}>
 				<div {...innerBlocksProps} />
 				{showNavigation && (
-					<div className="swiper-button-prev"></div>
+				<div className="swiper-button-prev"></div>
 				)}
 				{showNavigation && (
 					<div className="swiper-button-next"></div>
 				)}
 				{showPagination && (
 					<div className="swiper-pagination"></div>
-				)}
+				)}	
 			</div>
 		</>
 	);

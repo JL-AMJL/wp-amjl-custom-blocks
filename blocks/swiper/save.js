@@ -2,10 +2,35 @@ import { useSelect } from '@wordpress/data';
 import { useBlockProps, InnerBlocks, getBlockAttributes } from '@wordpress/block-editor';
 
 export default function save({ attributes }) {
-	const { autoplay, autoplaySpeed, slidesPerView, showNavigation, showPagination, isLoop } = attributes;
+	const {
+		autoplay,
+		autoplaySpeed,
+		slidesPerView,
+		showNavigation,
+		showPagination,
+		isLoop,
+		align,
+		height,
+		navigationPosition,
+		navigationOffsetX,
+		navigationOffsetY
+	} = attributes;
+
+	const style = {
+        ...(height ? { height } : {}),
+        ...(navigationOffsetX ? { '--swiper-navigation-sides-offset': `${navigationOffsetX}px` } : {}),
+        ...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {})
+    };    
 
     const blockProps = useBlockProps.save({
-    className: `swiper swiper-container${showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}`,
+    className: [
+        'swiper swiper-container',
+        align,
+        showNavigation ? 'has-swiper-navigation' : '',
+        showPagination ? 'has-swiper-pagination' : '',
+        navigationPosition ? `nav-position-${navigationPosition}` : ''
+    ].filter(Boolean).join(' '),
+    style: Object.keys(style).length ? style : undefined,
     'data-autoplay': autoplay,
     'data-autoplay-speed': autoplaySpeed,
     'data-slides-per-view': slidesPerView,
@@ -19,16 +44,16 @@ export default function save({ attributes }) {
                 <InnerBlocks.Content />
             </div>
             {showNavigation && (
-				<div className="swiper-button-prev"></div>
-			)}
+            <div className="swiper-button-prev"></div>
+            )}
 
-			{showNavigation && (
-				<div className="swiper-button-next"></div>
-			)}
+            {showNavigation && (
+                <div className="swiper-button-next"></div>
+            )}
 
-			{showPagination && (
-				<div className="swiper-pagination"></div>
-			)}
+            {showPagination && (
+                <div className="swiper-pagination"></div>
+            )}
         </div>
     );
 }

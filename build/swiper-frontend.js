@@ -47,6 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /***/ }),
 
+/***/ "./blocks/swiper/style-frontend.scss":
+/*!*******************************************!*\
+  !*** ./blocks/swiper/style-frontend.scss ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./node_modules/swiper/modules/a11y.mjs":
 /*!**********************************************!*\
   !*** ./node_modules/swiper/modules/a11y.mjs ***!
@@ -10661,6 +10673,8 @@ var __webpack_exports__ = {};
   \********************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _blocks_swiper_frontend_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../blocks/swiper/frontend.js */ "./blocks/swiper/frontend.js");
+/* harmony import */ var _blocks_swiper_style_frontend_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../blocks/swiper/style-frontend.scss */ "./blocks/swiper/style-frontend.scss");
+
 
 })();
 
