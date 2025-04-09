@@ -14,9 +14,11 @@ import {
 import { justifyStretch, alignLeft, alignRight, alignCenter } from '@wordpress/icons';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
+import { useIsSwiperReady } from './util';
+
 Swiper.use([Navigation, Pagination]);
 
-export default function Edit({ attributes, setAttributes }) {
+export default function Edit({ attributes, setAttributes, clientID }) {
 	const { 
 		autoplay, 
 		autoplaySpeed, 
@@ -28,7 +30,12 @@ export default function Edit({ attributes, setAttributes }) {
 		height,
 		navigationPosition,
 		navigationOffsetX,
-		navigationOffsetY
+		navigationOffsetY,
+		navigationSize,
+		paginationOffsetY,
+		paginationBulletSize,
+		paginationBulletHorizontalGap,
+		paginationBulletVerticalGap
 	} = attributes;
 
 	const slideTemplate = useMemo(() => [
@@ -41,20 +48,37 @@ export default function Edit({ attributes, setAttributes }) {
 			'amjl/swiper-slide',
 			{},
 			[['core/paragraph', { placeholder: 'Text für Slide 2' }]]
+		],
+		[
+			'amjl/swiper-slide',
+			{},
+			[['core/paragraph', { placeholder: 'Text für Slide 2' }]]
 		]
 	], []);
 
 	const style = {
 		...(height ? { height } : {}),
 		...(navigationOffsetX ? { '--swiper-navigation-sides-offset': `${navigationOffsetX}px` } : {}),
-		...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {})
+		...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {}),
+		...(navigationSize ? {'--swiper-navigation-size': `${navigationSize}`} : {}),
+		...(paginationOffsetY ? {'--swiper-pagination-bottom': `${paginationOffsetY}px`} : {}),
+		...(paginationBulletSize ? {'--swiper-pagination-bullet-size': `${paginationBulletSize}`} : {}),
+		...(paginationBulletHorizontalGap ? {'--swiper-pagination-bullet-horizontal-gap': `${paginationBulletHorizontalGap}px`} : {}),
+		...(paginationBulletVerticalGap ? {'--swiper-pagination-bullet-vertical-gap': `${paginationBulletVerticalGap}px`} : {})
 	};
 	
 	const baseProps = useBlockProps({ style });
 
 	const blockProps = {
 		...baseProps,
-		className: `${baseProps.className} swiper swiper-container ${align}{showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}${navigationPosition ? ` nav-position-${navigationPosition}` : ''}`
+		className: [
+			baseProps.className,
+			'swiper swiper-container',
+			align,
+			showNavigation ? 'has-swiper-navigation' : '',
+			showPagination ? 'has-swiper-pagination' : '',
+			navigationPosition ? `nav-position-${navigationPosition}` : ''
+		].filter(Boolean).join(' ')
 	};
 
 	const innerBlocksProps = useInnerBlocksProps(
@@ -67,11 +91,22 @@ export default function Edit({ attributes, setAttributes }) {
 	);
 
 	// useEffect für Swiper.
+	const isSwiperReady = useIsSwiperReady(clientID);
 	const wrapperRef = useRef(null);
 
 	useEffect(() => {
+		if (wrapperRef.current && height) {
+			wrapperRef.current.style.height = height;
+		}
+	}, [height, showNavigation, showPagination, isLoop]);
+	
+
+	useEffect(() => {
 		const el = wrapperRef.current;
-		if (!el) return;
+		if (!el || !useIsSwiperReady) return;
+
+		const wrapper = wrapperRef.current.querySelector('.swiper-wrapper');
+		if (!wrapper || (isLoop && wrapper.children.length < 2)) return;
 
 		if (el.swiper) {
 			el.swiper.destroy();
@@ -110,122 +145,185 @@ export default function Edit({ attributes, setAttributes }) {
 				el.swiper.destroy();
 			}
 		};
-	}, [isLoop, slidesPerView, showNavigation, showPagination]);
+	}, [isSwiperReady, isLoop, slidesPerView, showNavigation, showPagination]);
 
 	return (
 		<>
 			{/* Swiper Block Inspector Controls*/}
 			<InspectorControls>
-				<PanelBody>
-					<div className="swiper-settings">
-						<h3>{__('Slider Einstellungen', 'wp-amjl-custom-blocks')}</h3>
+				<PanelBody title={__('Slider Einstellungen', 'wp-amjl-custom-blocks')} initialOpen={false}>
+					{/* Autoplay Toggle */}
+					<ToggleControl
+						label={__('Autoplay', 'wp-amjl-custom-blocks')}
+						checked={autoplay}
+						onChange={(value) => setAttributes({ autoplay: value })}
+					/>
 
-						{/* Autoplay Toggle */}
-						<ToggleControl
-							label={__('Autoplay', 'wp-amjl-custom-blocks')}
-							checked={autoplay}
-							onChange={(value) => setAttributes({ autoplay: value })}
-						/>
-
-						{autoplay && (
-							<RangeControl
-								label={__('Autoplay Speed (ms)', 'wp-amjl-custom-blocks')}
-								value={autoplaySpeed}
-								onChange={(value) => setAttributes({ autoplaySpeed: value })}
-								min={0}
-								max={10000}
-								step={1}
-							/>
-						)}
-
-						{/* Loop Toggle */}
-						<ToggleControl
-							label={__('Loop', 'wp-amjl-custom-blocks')}
-							checked={isLoop}
-							onChange={(value) => setAttributes({ isLoop: value })}
-						/>
-
-						{/* Slideanzahl (Slides per View) */}
+					{autoplay && (
 						<RangeControl
-							label={__('Slideanzahl', 'wp-amjl-custom-blocks')}
-							value={slidesPerView}
-							onChange={(value) => setAttributes({ slidesPerView: value })}
-							min={1}
-							max={10}
+							label={__('Autoplay Speed (ms)', 'wp-amjl-custom-blocks')}
+							value={autoplaySpeed}
+							onChange={(value) => setAttributes({ autoplaySpeed: value })}
+							min={0}
+							max={10000}
+							step={1}
 						/>
+					)}
 
-                        {/* Höhe */}
-						<UnitControl
-							label={__('Höhe', 'wp-amjl-custom-blocks')}
-							value={height}
-							onChange={(value) => setAttributes({ height: value })}
-							units={[
-								{ value: 'px', label: 'px' },
-								{ value: '%', label: '%' },
-								{ value: 'vh', label: 'vh' },
-								{ value: 'vw', label: 'vw' },
-								{ value: 'em', label: 'em' },
-								{ value: 'rem', label: 'rem' }
-							]}
-							isUnitSelectTabbable
-							__nextHasNoMarginBottom
-						/>
+					{/* Loop Toggle */}
+					<ToggleControl
+						label={__('Loop', 'wp-amjl-custom-blocks')}
+						checked={isLoop}
+						onChange={(value) => setAttributes({ isLoop: value })}
+					/>
 
-						{/* Align Einstellungen (wide/full) */}
-						<SelectControl
-    						label={__('Ausrichtung', 'wp-amjl-custom-blocks')}
-    						value={align}
-    						onChange={(value) => setAttributes({ align: value })}
-    						options={[
-    							{ label: __('Standard', 'wp-amjl-custom-blocks'), value: '' },
-    							{ label: __('Breit (Wide)', 'wp-amjl-custom-blocks'), value: 'alignwide' },
-    							{ label: __('Vollbreite (Full)', 'wp-amjl-custom-blocks'), value: 'alignfull' }
-    						]}
-    					/>
+					{/* Slideanzahl (Slides per View) */}
+					<RangeControl
+						label={__('Slideanzahl', 'wp-amjl-custom-blocks')}
+						value={slidesPerView}
+						onChange={(value) => setAttributes({ slidesPerView: value })}
+						min={1}
+						max={10}
+					/>
 
-    					<h3>{__('Navigation Einstellungen', 'wp-amjl-custom-blocks')}</h3>
+					{/* Höhe */}
+					<UnitControl
+						label={__('Höhe', 'wp-amjl-custom-blocks')}
+						value={height}
+						onChange={(value) => setAttributes({ height: value })}
+						units={[
+							{ value: 'px', label: 'px', default: 100 },
+							{ value: '%', label: '%', default: 100 },
+							{ value: 'vh', label: 'vh' },
+							{ value: 'vw', label: 'vw' },
+							{ value: 'em', label: 'em' },
+							{ value: 'rem', label: 'rem' }
+						]}
+						isUnitSelectTabbable
+						__nextHasNoMarginBottom
+						isResetValueOnUnitChange
+						
+					/>
 
-						{/* Navigation Arrows Toggle */}
-						<ToggleControl
-							label={__('Navigation Arrows', 'wp-amjl-custom-blocks')}
-							checked={showNavigation}
-							onChange={(value) => setAttributes({ showNavigation: value })}
-						/>
-
-						{/* Pagination Toggle */}
-						<ToggleControl
-							label={__('Pagination', 'wp-amjl-custom-blocks')}
-							checked={showPagination}
-							onChange={(value) => setAttributes({ showPagination: value })}
-						/>
-					</div>
+					{/* Align Einstellungen (wide/full) */}
+					<SelectControl
+						label={__('Ausrichtung', 'wp-amjl-custom-blocks')}
+						value={align}
+						onChange={(value) => setAttributes({ align: value })}
+						options={[
+							{ label: __('Standard', 'wp-amjl-custom-blocks'), value: '' },
+							{ label: __('Breit (Wide)', 'wp-amjl-custom-blocks'), value: 'alignwide' },
+							{ label: __('Vollbreite (Full)', 'wp-amjl-custom-blocks'), value: 'alignfull' }
+						]}
+					/>
 				</PanelBody>
-				<PanelBody title={__('Navigation & Pagination', 'wp-amjl-custom-blocks')} initialOpen={false}>
-					<ToggleGroupControl
-						label={__('Position Presets', 'wp-amjl-custom-blocks')}
-						value={navigationPosition}
-						onChange={(value) => setAttributes({ navigationPosition: value })}
-						isBlock
-					>
-						<ToggleGroupControlOption value="standard" label="Standard" icon={justifyStretch} />
-						<ToggleGroupControlOption value="bottom-center" label="Unten Mitte" icon={alignCenter} />
-						<ToggleGroupControlOption value="bottom-left" label="Unten Links" icon={alignLeft}/>
-						<ToggleGroupControlOption value="bottom-right" label="Unten Rechts" icon= {alignRight}/>
-					</ToggleGroupControl>
-					<RangeControl
-						label={__('X-Verschiebung (px)', 'wp-amjl-custom-blocks')}
-						value={navigationOffsetX}
-						onChange={(value) => setAttributes({ navigationOffsetX: value })}
-						min={-200}
-						max={200}
+				<PanelBody title='Navigation Einstellungen' initialOpen={false}>
+					<h3>{__('Navigation Einstellungen', 'wp-amjl-custom-blocks')}</h3>
+
+					{/* Navigation Arrows Toggle */}
+					<ToggleControl
+						label={__('Navigation Arrows', 'wp-amjl-custom-blocks')}
+						checked={showNavigation}
+						onChange={(value) => setAttributes({ showNavigation: value })}
 					/>
-					<RangeControl
-						label={__('Y-Verschiebung (px)', 'wp-amjl-custom-blocks')}
-						value={navigationOffsetY}
-						onChange={(value) => setAttributes({ navigationOffsetY: value })}
-						min={-200}
-						max={200}
+
+					{showNavigation && (
+						<>
+							<ToggleGroupControl
+								label={__('Position Presets', 'wp-amjl-custom-blocks')}
+								value={navigationPosition}
+								onChange={(value) => setAttributes({ navigationPosition: value })}
+								isBlock
+							>
+								<ToggleGroupControlOption value="standard" label="Standard" icon={justifyStretch} />
+								<ToggleGroupControlOption value="bottom-center" label="Unten Mitte" icon={alignCenter} />
+								<ToggleGroupControlOption value="bottom-left" label="Unten Links" icon={alignLeft}/>
+								<ToggleGroupControlOption value="bottom-right" label="Unten Rechts" icon= {alignRight}/>
+							</ToggleGroupControl>
+							<RangeControl
+								label={__('X-Verschiebung (px)', 'wp-amjl-custom-blocks')}
+								value={navigationOffsetX}
+								onChange={(value) => setAttributes({ navigationOffsetX: value })}
+								min={-200}
+								max={200}
+							/>
+							<RangeControl
+								label={__('Y-Verschiebung (px)', 'wp-amjl-custom-blocks')}
+								value={navigationOffsetY}
+								onChange={(value) => setAttributes({ navigationOffsetY: value })}
+								min={-200}
+								max={200}
+							/>
+							<UnitControl
+								label={__('Navigation Größe', 'wp-amjl-custom-blocks')}
+								value={navigationSize}
+								onChange={(value) => setAttributes({ navigationSize: value })}
+								units={[
+									{ value: 'px', label: 'px', default: 44 },
+									{ value: '%', label: '%', default: 10 },
+									{ value: 'vh', label: 'vh', default: 10 },
+									{ value: 'vw', label: 'vw', default: 10},
+									{ value: 'em', label: 'em', default: 1 },
+									{ value: 'rem', label: 'rem', default:1 }
+								]}
+								isUnitSelectTabbable
+								__nextHasNoMarginBottom
+							/>
+						</>
+					)}
+				</PanelBody>
+				<PanelBody title={__('Pagination Einstellungen', 'wp-amjl-custom-blocks')} initialOpen={false}>
+					{/* Pagination Toggle */}
+					<ToggleControl
+						label={__('Pagination', 'wp-amjl-custom-blocks')}
+						checked={showPagination}
+						onChange={(value) => setAttributes({ showPagination: value })}
 					/>
+					{ showPagination && (
+						<>
+							<RangeControl
+								label={__('Y-Verschiebung (px)', 'wp-amjl-custom-blocks')}
+								value={paginationOffsetY}
+								onChange={(value) => setAttributes({ paginationOffsetY: value })}
+								currentInput={8}
+								min={-200}
+								max={200}
+								allowReset
+								resetFallbackValue={8}
+							/>
+							<UnitControl
+								label={__('Bullet Größe', 'wp-amjl-custom-blocks')}
+								value={paginationBulletSize}
+								onChange={(value) => setAttributes({ paginationBulletSize: value })}
+								units={[
+									{ value: 'px', label: 'px', default: 8 }
+								]}
+								isUnitSelectTabbable
+								isResetValueOnUnitChange
+								__nextHasNoMarginBottom
+							/>
+							<RangeControl
+								label={__('Bulletabstand X', 'wp-amjl-custom-blocks')}
+								value={paginationBulletHorizontalGap}
+								onChange={(value) => setAttributes({ paginationBulletHorizontalGap: value })}
+								currentInput={4}
+								min={0}
+								max={200}
+								allowReset
+								resetFallbackValue={4}
+							/>
+							<RangeControl
+								label={__('Bulletabstand Y', 'wp-amjl-custom-blocks')}
+								value={paginationBulletVerticalGap}
+								onChange={(value) => setAttributes({ paginationBulletVerticalGap: value })}
+								currentInput={6}
+								min={0}
+								max={200}
+								allowReset
+								resetFallbackValue={6}
+							/>
+						</>
+					)}							
 				</PanelBody>
 			</InspectorControls>
 

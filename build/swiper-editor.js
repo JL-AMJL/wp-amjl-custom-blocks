@@ -20,14 +20,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/justify-stretch.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/align-center.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/align-left.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/align-right.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/justify-stretch.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/align-center.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/align-left.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/align-right.js");
 /* harmony import */ var swiper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! swiper */ "./node_modules/swiper/swiper.mjs");
 /* harmony import */ var swiper_modules__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! swiper/modules */ "./node_modules/swiper/modules/index.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./util */ "./blocks/swiper/util.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -39,7 +41,8 @@ __webpack_require__.r(__webpack_exports__);
 swiper__WEBPACK_IMPORTED_MODULE_4__["default"].use([swiper_modules__WEBPACK_IMPORTED_MODULE_5__.Navigation, swiper_modules__WEBPACK_IMPORTED_MODULE_5__.Pagination]);
 function Edit({
   attributes,
-  setAttributes
+  setAttributes,
+  clientID
 }) {
   const {
     autoplay,
@@ -52,10 +55,17 @@ function Edit({
     height,
     navigationPosition,
     navigationOffsetX,
-    navigationOffsetY
+    navigationOffsetY,
+    navigationSize,
+    paginationOffsetY,
+    paginationBulletSize,
+    paginationBulletHorizontalGap,
+    paginationBulletVerticalGap
   } = attributes;
   const slideTemplate = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useMemo)(() => [['amjl/swiper-slide', {}, [['core/paragraph', {
     placeholder: 'Text für Slide 1'
+  }]]], ['amjl/swiper-slide', {}, [['core/paragraph', {
+    placeholder: 'Text für Slide 2'
   }]]], ['amjl/swiper-slide', {}, [['core/paragraph', {
     placeholder: 'Text für Slide 2'
   }]]]], []);
@@ -68,6 +78,21 @@ function Edit({
     } : {}),
     ...(navigationOffsetY ? {
       '--swiper-navigation-top-offset': `${navigationOffsetY}px`
+    } : {}),
+    ...(navigationSize ? {
+      '--swiper-navigation-size': `${navigationSize}`
+    } : {}),
+    ...(paginationOffsetY ? {
+      '--swiper-pagination-bottom': `${paginationOffsetY}px`
+    } : {}),
+    ...(paginationBulletSize ? {
+      '--swiper-pagination-bullet-size': `${paginationBulletSize}`
+    } : {}),
+    ...(paginationBulletHorizontalGap ? {
+      '--swiper-pagination-bullet-horizontal-gap': `${paginationBulletHorizontalGap}px`
+    } : {}),
+    ...(paginationBulletVerticalGap ? {
+      '--swiper-pagination-bullet-vertical-gap': `${paginationBulletVerticalGap}px`
     } : {})
   };
   const baseProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps)({
@@ -75,7 +100,7 @@ function Edit({
   });
   const blockProps = {
     ...baseProps,
-    className: `${baseProps.className} swiper swiper-container ${align}{showNavigation ? ' has-swiper-navigation' : ''}${showPagination ? ' has-swiper-pagination' : ''}${navigationPosition ? ` nav-position-${navigationPosition}` : ''}`
+    className: [baseProps.className, 'swiper swiper-container', align, showNavigation ? 'has-swiper-navigation' : '', showPagination ? 'has-swiper-pagination' : '', navigationPosition ? `nav-position-${navigationPosition}` : ''].filter(Boolean).join(' ')
   };
   const innerBlocksProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useInnerBlocksProps)({
     className: 'swiper-wrapper'
@@ -86,10 +111,18 @@ function Edit({
   });
 
   // useEffect für Swiper.
+  const isSwiperReady = (0,_util__WEBPACK_IMPORTED_MODULE_6__.useIsSwiperReady)(clientID);
   const wrapperRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    if (wrapperRef.current && height) {
+      wrapperRef.current.style.height = height;
+    }
+  }, [height, showNavigation, showPagination, isLoop]);
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     const el = wrapperRef.current;
-    if (!el) return;
+    if (!el || !_util__WEBPACK_IMPORTED_MODULE_6__.useIsSwiperReady) return;
+    const wrapper = wrapperRef.current.querySelector('.swiper-wrapper');
+    if (!wrapper || isLoop && wrapper.children.length < 2) return;
     if (el.swiper) {
       el.swiper.destroy();
     }
@@ -126,157 +159,245 @@ function Edit({
         el.swiper.destroy();
       }
     };
-  }, [isLoop, slidesPerView, showNavigation, showPagination]);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
-          className: "swiper-settings",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
-            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Slider Einstellungen', 'wp-amjl-custom-blocks')
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Autoplay', 'wp-amjl-custom-blocks'),
-            checked: autoplay,
+  }, [isSwiperReady, isLoop, slidesPerView, showNavigation, showPagination]);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Slider Einstellungen', 'wp-amjl-custom-blocks'),
+        initialOpen: false,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Autoplay', 'wp-amjl-custom-blocks'),
+          checked: autoplay,
+          onChange: value => setAttributes({
+            autoplay: value
+          })
+        }), autoplay && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Autoplay Speed (ms)', 'wp-amjl-custom-blocks'),
+          value: autoplaySpeed,
+          onChange: value => setAttributes({
+            autoplaySpeed: value
+          }),
+          min: 0,
+          max: 10000,
+          step: 1
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Loop', 'wp-amjl-custom-blocks'),
+          checked: isLoop,
+          onChange: value => setAttributes({
+            isLoop: value
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Slideanzahl', 'wp-amjl-custom-blocks'),
+          value: slidesPerView,
+          onChange: value => setAttributes({
+            slidesPerView: value
+          }),
+          min: 1,
+          max: 10
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalUnitControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Höhe', 'wp-amjl-custom-blocks'),
+          value: height,
+          onChange: value => setAttributes({
+            height: value
+          }),
+          units: [{
+            value: 'px',
+            label: 'px',
+            default: 100
+          }, {
+            value: '%',
+            label: '%',
+            default: 100
+          }, {
+            value: 'vh',
+            label: 'vh'
+          }, {
+            value: 'vw',
+            label: 'vw'
+          }, {
+            value: 'em',
+            label: 'em'
+          }, {
+            value: 'rem',
+            label: 'rem'
+          }],
+          isUnitSelectTabbable: true,
+          __nextHasNoMarginBottom: true,
+          isResetValueOnUnitChange: true
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Ausrichtung', 'wp-amjl-custom-blocks'),
+          value: align,
+          onChange: value => setAttributes({
+            align: value
+          }),
+          options: [{
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Standard', 'wp-amjl-custom-blocks'),
+            value: ''
+          }, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Breit (Wide)', 'wp-amjl-custom-blocks'),
+            value: 'alignwide'
+          }, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Vollbreite (Full)', 'wp-amjl-custom-blocks'),
+            value: 'alignfull'
+          }]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: "Navigation Einstellungen",
+        initialOpen: false,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h3", {
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Navigation Einstellungen', 'wp-amjl-custom-blocks')
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Navigation Arrows', 'wp-amjl-custom-blocks'),
+          checked: showNavigation,
+          onChange: value => setAttributes({
+            showNavigation: value
+          })
+        }), showNavigation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Position Presets', 'wp-amjl-custom-blocks'),
+            value: navigationPosition,
             onChange: value => setAttributes({
-              autoplay: value
-            })
-          }), autoplay && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Autoplay Speed (ms)', 'wp-amjl-custom-blocks'),
-            value: autoplaySpeed,
-            onChange: value => setAttributes({
-              autoplaySpeed: value
+              navigationPosition: value
             }),
-            min: 0,
-            max: 10000,
-            step: 1
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Loop', 'wp-amjl-custom-blocks'),
-            checked: isLoop,
+            isBlock: true,
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
+              value: "standard",
+              label: "Standard",
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__["default"]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
+              value: "bottom-center",
+              label: "Unten Mitte",
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_9__["default"]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
+              value: "bottom-left",
+              label: "Unten Links",
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_10__["default"]
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
+              value: "bottom-right",
+              label: "Unten Rechts",
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_11__["default"]
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('X-Verschiebung (px)', 'wp-amjl-custom-blocks'),
+            value: navigationOffsetX,
             onChange: value => setAttributes({
-              isLoop: value
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Slideanzahl', 'wp-amjl-custom-blocks'),
-            value: slidesPerView,
-            onChange: value => setAttributes({
-              slidesPerView: value
+              navigationOffsetX: value
             }),
-            min: 1,
-            max: 10
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalUnitControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Höhe', 'wp-amjl-custom-blocks'),
-            value: height,
+            min: -200,
+            max: 200
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Y-Verschiebung (px)', 'wp-amjl-custom-blocks'),
+            value: navigationOffsetY,
             onChange: value => setAttributes({
-              height: value
+              navigationOffsetY: value
+            }),
+            min: -200,
+            max: 200
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalUnitControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Navigation Größe', 'wp-amjl-custom-blocks'),
+            value: navigationSize,
+            onChange: value => setAttributes({
+              navigationSize: value
             }),
             units: [{
               value: 'px',
-              label: 'px'
+              label: 'px',
+              default: 44
             }, {
               value: '%',
-              label: '%'
+              label: '%',
+              default: 10
             }, {
               value: 'vh',
-              label: 'vh'
+              label: 'vh',
+              default: 10
             }, {
               value: 'vw',
-              label: 'vw'
+              label: 'vw',
+              default: 10
             }, {
               value: 'em',
-              label: 'em'
+              label: 'em',
+              default: 1
             }, {
               value: 'rem',
-              label: 'rem'
+              label: 'rem',
+              default: 1
             }],
             isUnitSelectTabbable: true,
             __nextHasNoMarginBottom: true
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.SelectControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Ausrichtung', 'wp-amjl-custom-blocks'),
-            value: align,
-            onChange: value => setAttributes({
-              align: value
-            }),
-            options: [{
-              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Standard', 'wp-amjl-custom-blocks'),
-              value: ''
-            }, {
-              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Breit (Wide)', 'wp-amjl-custom-blocks'),
-              value: 'alignwide'
-            }, {
-              label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Vollbreite (Full)', 'wp-amjl-custom-blocks'),
-              value: 'alignfull'
-            }]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
-            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Navigation Einstellungen', 'wp-amjl-custom-blocks')
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Navigation Arrows', 'wp-amjl-custom-blocks'),
-            checked: showNavigation,
-            onChange: value => setAttributes({
-              showNavigation: value
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
-            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Pagination', 'wp-amjl-custom-blocks'),
-            checked: showPagination,
-            onChange: value => setAttributes({
-              showPagination: value
-            })
           })]
-        })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
-        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Navigation & Pagination', 'wp-amjl-custom-blocks'),
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Pagination Einstellungen', 'wp-amjl-custom-blocks'),
         initialOpen: false,
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControl, {
-          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Position Presets', 'wp-amjl-custom-blocks'),
-          value: navigationPosition,
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.ToggleControl, {
+          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Pagination', 'wp-amjl-custom-blocks'),
+          checked: showPagination,
           onChange: value => setAttributes({
-            navigationPosition: value
-          }),
-          isBlock: true,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
-            value: "standard",
-            label: "Standard",
-            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__["default"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
-            value: "bottom-center",
-            label: "Unten Mitte",
-            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__["default"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
-            value: "bottom-left",
-            label: "Unten Links",
-            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_9__["default"]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalToggleGroupControlOption, {
-            value: "bottom-right",
-            label: "Unten Rechts",
-            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_10__["default"]
+            showPagination: value
+          })
+        }), showPagination && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Y-Verschiebung (px)', 'wp-amjl-custom-blocks'),
+            value: paginationOffsetY,
+            onChange: value => setAttributes({
+              paginationOffsetY: value
+            }),
+            currentInput: 8,
+            min: -200,
+            max: 200,
+            allowReset: true,
+            resetFallbackValue: 8
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.__experimentalUnitControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Bullet Größe', 'wp-amjl-custom-blocks'),
+            value: paginationBulletSize,
+            onChange: value => setAttributes({
+              paginationBulletSize: value
+            }),
+            units: [{
+              value: 'px',
+              label: 'px',
+              default: 8
+            }],
+            isUnitSelectTabbable: true,
+            isResetValueOnUnitChange: true,
+            __nextHasNoMarginBottom: true
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Bulletabstand X', 'wp-amjl-custom-blocks'),
+            value: paginationBulletHorizontalGap,
+            onChange: value => setAttributes({
+              paginationBulletHorizontalGap: value
+            }),
+            currentInput: 4,
+            min: 0,
+            max: 200,
+            allowReset: true,
+            resetFallbackValue: 4
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
+            label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Bulletabstand Y', 'wp-amjl-custom-blocks'),
+            value: paginationBulletVerticalGap,
+            onChange: value => setAttributes({
+              paginationBulletVerticalGap: value
+            }),
+            currentInput: 6,
+            min: 0,
+            max: 200,
+            allowReset: true,
+            resetFallbackValue: 6
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
-          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('X-Verschiebung (px)', 'wp-amjl-custom-blocks'),
-          value: navigationOffsetX,
-          onChange: value => setAttributes({
-            navigationOffsetX: value
-          }),
-          min: -200,
-          max: 200
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.RangeControl, {
-          label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)('Y-Verschiebung (px)', 'wp-amjl-custom-blocks'),
-          value: navigationOffsetY,
-          onChange: value => setAttributes({
-            navigationOffsetY: value
-          }),
-          min: -200,
-          max: 200
         })]
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
       ...blockProps,
       ref: wrapperRef,
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
         ...innerBlocksProps
-      }), showNavigation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+      }), showNavigation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
         className: "swiper-button-prev"
-      }), showNavigation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+      }), showNavigation && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
         className: "swiper-button-next"
-      }), showPagination && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+      }), showPagination && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
         className: "swiper-pagination"
       })]
     })]
@@ -318,7 +439,12 @@ function save({
     height,
     navigationPosition,
     navigationOffsetX,
-    navigationOffsetY
+    navigationOffsetY,
+    navigationSize,
+    paginationOffsetY,
+    paginationBulletSize,
+    paginationBulletHorizontalGap,
+    paginationBulletVerticalGap
   } = attributes;
   const style = {
     ...(height ? {
@@ -329,6 +455,21 @@ function save({
     } : {}),
     ...(navigationOffsetY ? {
       '--swiper-navigation-top-offset': `${navigationOffsetY}px`
+    } : {}),
+    ...(navigationSize ? {
+      '--swiper-navigation-size': `${navigationSize}`
+    } : {}),
+    ...(paginationOffsetY ? {
+      '--swiper-pagination-bottom': `${paginationOffsetY}px`
+    } : {}),
+    ...(paginationBulletSize ? {
+      '--swiper-pagination-bullet-size': `${paginationBulletSize}`
+    } : {}),
+    ...(paginationBulletHorizontalGap ? {
+      '--swiper-pagination-bullet-horizontal-gap': `${paginationBulletHorizontalGap}px`
+    } : {}),
+    ...(paginationBulletVerticalGap ? {
+      '--swiper-pagination-bullet-vertical-gap': `${paginationBulletVerticalGap}px`
     } : {})
   };
   const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.useBlockProps.save({
@@ -365,6 +506,31 @@ function save({
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
+
+/***/ }),
+
+/***/ "./blocks/swiper/util.js":
+/*!*******************************!*\
+  !*** ./blocks/swiper/util.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   useIsSwiperReady: () => (/* binding */ useIsSwiperReady)
+/* harmony export */ });
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
+/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_0__);
+
+function useIsSwiperReady(clientId) {
+  return (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.useSelect)(select => {
+    const {
+      getBlock
+    } = select('core/block-editor');
+    const block = getBlock(clientId);
+    return block?.innerBlocks?.length > 0;
+  }, [clientId]);
+}
 
 /***/ }),
 

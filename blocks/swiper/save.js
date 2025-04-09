@@ -13,13 +13,23 @@ export default function save({ attributes }) {
 		height,
 		navigationPosition,
 		navigationOffsetX,
-		navigationOffsetY
+		navigationOffsetY,
+        navigationSize,
+		paginationOffsetY,
+		paginationBulletSize,
+		paginationBulletHorizontalGap,
+		paginationBulletVerticalGap
 	} = attributes;
 
 	const style = {
         ...(height ? { height } : {}),
         ...(navigationOffsetX ? { '--swiper-navigation-sides-offset': `${navigationOffsetX}px` } : {}),
-        ...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {})
+        ...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {}),
+        ...(navigationSize ? {'--swiper-navigation-size': `${navigationSize}`} : {}),
+		...(paginationOffsetY ? {'--swiper-pagination-bottom': `${paginationOffsetY}px`} : {}),
+		...(paginationBulletSize ? {'--swiper-pagination-bullet-size': `${paginationBulletSize}`} : {}),
+		...(paginationBulletHorizontalGap ? {'--swiper-pagination-bullet-horizontal-gap': `${paginationBulletHorizontalGap}px`} : {}),
+		...(paginationBulletVerticalGap ? {'--swiper-pagination-bullet-vertical-gap': `${paginationBulletVerticalGap}px`} : {})
     };    
 
     const blockProps = useBlockProps.save({

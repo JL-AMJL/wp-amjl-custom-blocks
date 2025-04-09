@@ -75,7 +75,7 @@
     },
     "height": {
       "type": "string",
-      "default": ""
+      "default": "100px"
     },
     "autoplay": {
       "type": "boolean",
@@ -112,6 +112,26 @@
     "navigationOffsetY": {
       "type": "number",
       "default": 0
+    },
+    "navigationSize":{
+      "type": "string",
+      "default": "44px"
+    },
+		"paginationOffsetY": {
+      "typ": "number",
+      "default": 0
+    },
+		"paginationBulletSize":{
+      "type": "string",
+      "default": "8px"
+    },
+		"paginationBulletHorizontalGap":{
+      "type": "string",
+      "default": 4
+    },
+		"paginationBulletVerticalGap":{
+      "type": "string",
+      "default": 6
     }
   },
   "innerBlocks": ["amjl/swiper-slide"]
