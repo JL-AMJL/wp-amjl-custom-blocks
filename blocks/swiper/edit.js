@@ -14,11 +14,11 @@ import {
 import { justifyStretch, alignLeft, alignRight, alignCenter } from '@wordpress/icons';
 import Swiper from 'swiper';
 import { Navigation, Pagination } from 'swiper/modules';
-import { useIsSwiperReady } from './util';
+import { useInitSwiper, useIsSwiperReady } from './util';
 
 Swiper.use([Navigation, Pagination]);
 
-export default function Edit({ attributes, setAttributes, clientID }) {
+export default function Edit({ attributes, setAttributes, clientId }) {
 	const { 
 		autoplay, 
 		autoplaySpeed, 
@@ -91,7 +91,6 @@ export default function Edit({ attributes, setAttributes, clientID }) {
 	);
 
 	// useEffect für Swiper.
-	const isSwiperReady = useIsSwiperReady(clientID);
 	const wrapperRef = useRef(null);
 
 	useEffect(() => {
@@ -101,51 +100,14 @@ export default function Edit({ attributes, setAttributes, clientID }) {
 	}, [height, showNavigation, showPagination, isLoop]);
 	
 
-	useEffect(() => {
-		const el = wrapperRef.current;
-		if (!el || !useIsSwiperReady) return;
-
-		const wrapper = wrapperRef.current.querySelector('.swiper-wrapper');
-		if (!wrapper || (isLoop && wrapper.children.length < 2)) return;
-
-		if (el.swiper) {
-			el.swiper.destroy();
-		}
-
-		// Swiper neu initialisieren
-		const instance = new Swiper(el, {
-			slidesPerView: slidesPerView,
-			autoplay: false,
-			loop: isLoop ? true : false,
-			...(showNavigation && {
-				navigation: {
-					prevEl: el.querySelector('.swiper-button-prev'),
-					nextEl: el.querySelector('.swiper-button-next'),
-				}
-			}),
-			...(showPagination && {
-				pagination: {
-					el: el.querySelector('.swiper-pagination'),
-					clickable: true,
-				}
-			})
-		});
-
-		if (showPagination) {
-			setTimeout(() => {
-				const paginationEl = wrapperRef.current?.querySelector('.swiper-pagination');
-				instance.pagination?.render?.();
-				instance.pagination?.update?.();
-			}, 500);
-		}
-
-		// Cleanup bei Unmount
-		return () => {
-			if (el.swiper) {
-				el.swiper.destroy();
-			}
-		};
-	}, [isSwiperReady, isLoop, slidesPerView, showNavigation, showPagination]);
+	useInitSwiper({
+		clientId,
+		ref: wrapperRef,
+		isLoop,
+		slidesPerView,
+		showNavigation,
+		showPagination
+	});
 
 	return (
 		<>

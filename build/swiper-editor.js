@@ -42,7 +42,7 @@ swiper__WEBPACK_IMPORTED_MODULE_4__["default"].use([swiper_modules__WEBPACK_IMPO
 function Edit({
   attributes,
   setAttributes,
-  clientID
+  clientId
 }) {
   const {
     autoplay,
@@ -111,55 +111,20 @@ function Edit({
   });
 
   // useEffect für Swiper.
-  const isSwiperReady = (0,_util__WEBPACK_IMPORTED_MODULE_6__.useIsSwiperReady)(clientID);
   const wrapperRef = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
     if (wrapperRef.current && height) {
       wrapperRef.current.style.height = height;
     }
   }, [height, showNavigation, showPagination, isLoop]);
-  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
-    const el = wrapperRef.current;
-    if (!el || !_util__WEBPACK_IMPORTED_MODULE_6__.useIsSwiperReady) return;
-    const wrapper = wrapperRef.current.querySelector('.swiper-wrapper');
-    if (!wrapper || isLoop && wrapper.children.length < 2) return;
-    if (el.swiper) {
-      el.swiper.destroy();
-    }
-
-    // Swiper neu initialisieren
-    const instance = new swiper__WEBPACK_IMPORTED_MODULE_4__["default"](el, {
-      slidesPerView: slidesPerView,
-      autoplay: false,
-      loop: isLoop ? true : false,
-      ...(showNavigation && {
-        navigation: {
-          prevEl: el.querySelector('.swiper-button-prev'),
-          nextEl: el.querySelector('.swiper-button-next')
-        }
-      }),
-      ...(showPagination && {
-        pagination: {
-          el: el.querySelector('.swiper-pagination'),
-          clickable: true
-        }
-      })
-    });
-    if (showPagination) {
-      setTimeout(() => {
-        const paginationEl = wrapperRef.current?.querySelector('.swiper-pagination');
-        instance.pagination?.render?.();
-        instance.pagination?.update?.();
-      }, 500);
-    }
-
-    // Cleanup bei Unmount
-    return () => {
-      if (el.swiper) {
-        el.swiper.destroy();
-      }
-    };
-  }, [isSwiperReady, isLoop, slidesPerView, showNavigation, showPagination]);
+  (0,_util__WEBPACK_IMPORTED_MODULE_6__.useInitSwiper)({
+    clientId,
+    ref: wrapperRef,
+    isLoop,
+    slidesPerView,
+    showNavigation,
+    showPagination
+  });
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_1__.InspectorControls, {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.PanelBody, {
@@ -517,20 +482,72 @@ __webpack_require__.r(__webpack_exports__);
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   useIsSwiperReady: () => (/* binding */ useIsSwiperReady)
+/* harmony export */   useInitSwiper: () => (/* binding */ useInitSwiper)
 /* harmony export */ });
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
 /* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var swiper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! swiper */ "./node_modules/swiper/swiper.mjs");
 
-function useIsSwiperReady(clientId) {
-  return (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.useSelect)(select => {
-    const {
-      getBlock
-    } = select('core/block-editor');
-    const block = getBlock(clientId);
+
+
+
+const useInitSwiper = ({
+  clientId,
+  ref,
+  isLoop,
+  slidesPerView,
+  showNavigation,
+  showPagination
+}) => {
+  const hasInnerBlocks = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_0__.useSelect)(select => {
+    const block = select(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_2__.store).getBlock(clientId);
     return block?.innerBlocks?.length > 0;
   }, [clientId]);
-}
+  (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    if (!hasInnerBlocks || !ref.current) return;
+    const el = ref.current;
+    const frame = requestAnimationFrame(() => {
+      const wrapper = el.querySelector('.swiper-wrapper');
+      if (!wrapper || isLoop && wrapper.children.length < 2) return;
+      if (el.swiper) {
+        el.swiper.destroy();
+      }
+      const instance = new swiper__WEBPACK_IMPORTED_MODULE_3__["default"](el, {
+        slidesPerView,
+        autoplay: false,
+        loop: isLoop,
+        ...(showNavigation && {
+          navigation: {
+            prevEl: el.querySelector('.swiper-button-prev'),
+            nextEl: el.querySelector('.swiper-button-next')
+          }
+        }),
+        ...(showPagination && {
+          pagination: {
+            el: el.querySelector('.swiper-pagination'),
+            clickable: true
+          }
+        })
+      });
+      if (showPagination) {
+        setTimeout(() => {
+          instance.pagination?.render?.();
+          instance.pagination?.update?.();
+        }, 500);
+      }
+    });
+    return () => {
+      cancelAnimationFrame(frame);
+      if (ref.current?.swiper) {
+        ref.current.swiper.destroy();
+      }
+    };
+  }, [hasInnerBlocks, ref, isLoop, slidesPerView, showNavigation, showPagination]);
+};
 
 /***/ }),
 
