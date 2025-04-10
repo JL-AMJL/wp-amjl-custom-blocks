@@ -11674,6 +11674,7 @@ __webpack_require__.r(__webpack_exports__);
   edit: _blocks_swiper_edit__WEBPACK_IMPORTED_MODULE_1__["default"],
   save: _blocks_swiper_save__WEBPACK_IMPORTED_MODULE_2__["default"]
 });
+console.log('Swiper block loaded'); // eslint-disable-line no-console
 })();
 
 /******/ })()

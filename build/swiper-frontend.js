@@ -10676,6 +10676,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _blocks_swiper_style_frontend_scss__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../blocks/swiper/style-frontend.scss */ "./blocks/swiper/style-frontend.scss");
 
 
+console.log('Swiper block loaded');
 })();
 
 /******/ })()

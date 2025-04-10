@@ -10,5 +10,6 @@
 function amjl_register_swiper_block() {
     register_block_type( __DIR__ . '/blocks/swiper' );
     register_block_type( __DIR__ . '/blocks/swiper-slide' );
+    register_block_type( __DIR__ . '/blocks/icon' );
 }
 add_action( 'init', 'amjl_register_swiper_block' );

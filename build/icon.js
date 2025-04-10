@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./blocks/swiper-slide/edit.js":
-/*!*************************************!*\
-  !*** ./blocks/swiper-slide/edit.js ***!
-  \*************************************/
+/***/ "./blocks/icon/edit.js":
+/*!*****************************!*\
+  !*** ./blocks/icon/edit.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -18,50 +18,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
-function Edit() {
-  const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)({
-    className: 'swiper-slide'
-  });
+function Edit({
+  attributes,
+  setAttributes
+}) {
+  const {
+    icon
+  } = attributes;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-    ...blockProps,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks, {
-      template: [['core/paragraph', {
-        placeholder: 'Slide-Inhalt hier…'
-      }]],
-      templateLock: false
+    ...(0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)(),
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "amjl-icon",
+      children: icon ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+        src: icon,
+        alt: "Icon"
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+        children: "No icon selected"
+      })
     })
   });
 }
 
 /***/ }),
 
-/***/ "./blocks/swiper-slide/index.js":
-/*!**************************************!*\
-  !*** ./blocks/swiper-slide/index.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
-/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _edit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./edit */ "./blocks/swiper-slide/edit.js");
-/* harmony import */ var _save__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./save */ "./blocks/swiper-slide/save.js");
-/* harmony import */ var _style_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style.scss */ "./blocks/swiper-slide/style.scss");
-
-
-
-
-(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)('amjl/swiper-slide', {
-  edit: _edit__WEBPACK_IMPORTED_MODULE_1__["default"],
-  save: _save__WEBPACK_IMPORTED_MODULE_2__["default"]
-});
-
-/***/ }),
-
-/***/ "./blocks/swiper-slide/save.js":
-/*!*************************************!*\
-  !*** ./blocks/swiper-slide/save.js ***!
-  \*************************************/
+/***/ "./blocks/icon/save.js":
+/*!*****************************!*\
+  !*** ./blocks/icon/save.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -74,22 +57,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
-function save() {
-  const blockProps = _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save({
-    className: 'swiper-slide'
-  });
+function save({
+  attributes
+}) {
+  const {
+    icon
+  } = attributes;
+  console.log('Attributes in save function:', attributes);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-    ...blockProps,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InnerBlocks.Content, {})
+    ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save(),
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+      className: "amjl-icon",
+      children: icon && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
+        src: icon,
+        alt: "Icon"
+      })
+    })
   });
 }
 
 /***/ }),
 
-/***/ "./blocks/swiper-slide/style.scss":
-/*!****************************************!*\
-  !*** ./blocks/swiper-slide/style.scss ***!
-  \****************************************/
+/***/ "./blocks/icon/style.scss":
+/*!********************************!*\
+  !*** ./blocks/icon/style.scss ***!
+  \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -98,16 +90,26 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/swiper-slide.js":
-/*!*****************************!*\
-  !*** ./src/swiper-slide.js ***!
-  \*****************************/
+/***/ "./src/icon.js":
+/*!*********************!*\
+  !*** ./src/icon.js ***!
+  \*********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _blocks_swiper_slide_index_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../blocks/swiper-slide/index.js */ "./blocks/swiper-slide/index.js");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/blocks */ "@wordpress/blocks");
+/* harmony import */ var _wordpress_blocks__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _blocks_icon_edit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../blocks/icon/edit */ "./blocks/icon/edit.js");
+/* harmony import */ var _blocks_icon_save__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../blocks/icon/save */ "./blocks/icon/save.js");
+/* harmony import */ var _blocks_icon_style_scss__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../blocks/icon/style.scss */ "./blocks/icon/style.scss");
 
-console.log('Swiper Slide block loaded');
+
+
+
+(0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)('amjl/icon', {
+  edit: _blocks_icon_edit__WEBPACK_IMPORTED_MODULE_1__["default"],
+  save: _blocks_icon_save__WEBPACK_IMPORTED_MODULE_2__["default"]
+});
 
 /***/ }),
 
@@ -251,8 +253,8 @@ module.exports = window["ReactJSXRuntime"];
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			"swiper-slide": 0,
-/******/ 			"./style-swiper-slide": 0
+/******/ 			"icon": 0,
+/******/ 			"./style-icon": 0
 /******/ 		};
 /******/ 		
 /******/ 		// no chunk on demand loading
@@ -302,9 +304,9 @@ module.exports = window["ReactJSXRuntime"];
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-swiper-slide"], () => (__webpack_require__("./src/swiper-slide.js")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["./style-icon"], () => (__webpack_require__("./src/icon.js")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=swiper-slide.js.map
+//# sourceMappingURL=icon.js.map

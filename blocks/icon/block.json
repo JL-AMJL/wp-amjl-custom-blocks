@@ -1,0 +1,22 @@
+{
+    "apiVersion": 2,
+    "name": "amjl/icon",
+    "title": "Icon",
+    "category": "media",
+    "icon": "admin-customizer",
+    "description": "Ein Icon Block mit fontawesome Icons.",
+    "keywords": ["icon", "fontawesome"],
+    "supports": {
+      "reusable": false
+    },
+    "attributes": {
+        "icon": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "textdomain": "wp-amjl-custom-blocks",
+    "editorScript": "file:../../build/icon.js",
+    "editorStyle": "file:../../build/style-icon.css",
+    "style": "file:../../build/style-icon.css"
+}

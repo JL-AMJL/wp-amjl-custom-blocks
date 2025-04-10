@@ -7,3 +7,5 @@ registerBlockType('amjl/swiper', {
     edit,
     save,
 });
+
+console.log('Swiper block loaded'); // eslint-disable-line no-console
