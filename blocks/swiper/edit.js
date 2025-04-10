@@ -1,86 +1,30 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, useInnerBlocksProps, InspectorControls } from '@wordpress/block-editor';
-import { useEffect, useRef, useMemo } from '@wordpress/element';
-import { 
-	PanelBody,
-	ToggleControl,
-	SelectControl,
-	RangeControl,
-	__experimentalUnitControl as UnitControl,
-	__experimentalToggleGroupControl as ToggleGroupControl,
-	__experimentalToggleGroupControlOption as ToggleGroupControlOption,
-	Tooltip
-} from '@wordpress/components';
-import { justifyStretch, alignLeft, alignRight, alignCenter } from '@wordpress/icons';
-import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
-import { useInitSwiper, useIsSwiperReady } from './util';
-
-Swiper.use([Navigation, Pagination]);
+import { useBlockProps, useInnerBlocksProps } from '@wordpress/block-editor';
+import { useEffect, useRef } from '@wordpress/element';
+import { useInitSwiper, generateStyles, generateClassName } from './utils';
+import { slideTemplate } from './slide-template';
+import SwiperSettingsPanel from './settings-panel';
+import SwiperStylesPanel from './styles-panel';
 
 export default function Edit({ attributes, setAttributes, clientId }) {
-	const { 
-		autoplay, 
-		autoplaySpeed, 
-		isLoop, 
-		slidesPerView, 
-		showNavigation, 
-		showPagination, 
-		align, 
-		height,
-		navigationPosition,
-		navigationOffsetX,
-		navigationOffsetY,
-		navigationSize,
-		paginationOffsetY,
-		paginationBulletSize,
-		paginationBulletHorizontalGap,
-		paginationBulletVerticalGap
-	} = attributes;
 
-	const slideTemplate = useMemo(() => [
-		[
-			'amjl/swiper-slide',
-			{},
-			[['core/paragraph', { placeholder: 'Text für Slide 1' }]]
-		],
-		[
-			'amjl/swiper-slide',
-			{},
-			[['core/paragraph', { placeholder: 'Text für Slide 2' }]]
-		],
-		[
-			'amjl/swiper-slide',
-			{},
-			[['core/paragraph', { placeholder: 'Text für Slide 2' }]]
-		]
-	], []);
-
-	const style = {
-		...(height ? { height } : {}),
-		...(navigationOffsetX ? { '--swiper-navigation-sides-offset': `${navigationOffsetX}px` } : {}),
-		...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {}),
-		...(navigationSize ? {'--swiper-navigation-size': `${navigationSize}`} : {}),
-		...(paginationOffsetY ? {'--swiper-pagination-bottom': `${paginationOffsetY}px`} : {}),
-		...(paginationBulletSize ? {'--swiper-pagination-bullet-size': `${paginationBulletSize}`} : {}),
-		...(paginationBulletHorizontalGap ? {'--swiper-pagination-bullet-horizontal-gap': `${paginationBulletHorizontalGap}px`} : {}),
-		...(paginationBulletVerticalGap ? {'--swiper-pagination-bullet-vertical-gap': `${paginationBulletVerticalGap}px`} : {})
-	};
+	/**
+	 * Generate Style and ClassName
+	 */
+	const style = generateStyles(attributes);
+	const className = generateClassName(attributes);
 	
-	const baseProps = useBlockProps({ style });
+	/**
+	 * blockProps
+	 */
+	const blockProps = useBlockProps({
+		style,
+		className
+	});
 
-	const blockProps = {
-		...baseProps,
-		className: [
-			baseProps.className,
-			'swiper swiper-container',
-			align,
-			showNavigation ? 'has-swiper-navigation' : '',
-			showPagination ? 'has-swiper-pagination' : '',
-			navigationPosition ? `nav-position-${navigationPosition}` : ''
-		].filter(Boolean).join(' ')
-	};
-
+	/**
+	 * Inner Block Props
+	 */
 	const innerBlocksProps = useInnerBlocksProps(
 		{ className: 'swiper-wrapper' },
 		{
@@ -90,216 +34,43 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 		}
 	);
 
-	// useEffect für Swiper.
+	/**
+	 * Initialize Swiper
+	 */
 	const wrapperRef = useRef(null);
 
 	useEffect(() => {
-		if (wrapperRef.current && height) {
-			wrapperRef.current.style.height = height;
+		if (wrapperRef.current) {
+			const styles= generateStyles(attributes);
+			if (styles.height) {
+				wrapperRef.current.style.height = styles.height;
+			}
 		}
-	}, [height, showNavigation, showPagination, isLoop]);
-	
+	}, [attributes.height, attributes.showNavigation, attributes.showPagination, attributes.isLoop]);
 
 	useInitSwiper({
 		clientId,
 		ref: wrapperRef,
-		isLoop,
-		slidesPerView,
-		showNavigation,
-		showPagination
+		attributes
 	});
 
 	return (
 		<>
 			{/* Swiper Block Inspector Controls*/}
-			<InspectorControls>
-				<PanelBody title={__('Slider Einstellungen', 'wp-amjl-custom-blocks')} initialOpen={false}>
-					{/* Autoplay Toggle */}
-					<ToggleControl
-						label={__('Autoplay', 'wp-amjl-custom-blocks')}
-						checked={autoplay}
-						onChange={(value) => setAttributes({ autoplay: value })}
-					/>
-
-					{autoplay && (
-						<RangeControl
-							label={__('Autoplay Speed (ms)', 'wp-amjl-custom-blocks')}
-							value={autoplaySpeed}
-							onChange={(value) => setAttributes({ autoplaySpeed: value })}
-							min={0}
-							max={10000}
-							step={1}
-						/>
-					)}
-
-					{/* Loop Toggle */}
-					<ToggleControl
-						label={__('Loop', 'wp-amjl-custom-blocks')}
-						checked={isLoop}
-						onChange={(value) => setAttributes({ isLoop: value })}
-					/>
-
-					{/* Slideanzahl (Slides per View) */}
-					<RangeControl
-						label={__('Slideanzahl', 'wp-amjl-custom-blocks')}
-						value={slidesPerView}
-						onChange={(value) => setAttributes({ slidesPerView: value })}
-						min={1}
-						max={10}
-					/>
-
-					{/* Höhe */}
-					<UnitControl
-						label={__('Höhe', 'wp-amjl-custom-blocks')}
-						value={height}
-						onChange={(value) => setAttributes({ height: value })}
-						units={[
-							{ value: 'px', label: 'px', default: 100 },
-							{ value: '%', label: '%', default: 100 },
-							{ value: 'vh', label: 'vh' },
-							{ value: 'vw', label: 'vw' },
-							{ value: 'em', label: 'em' },
-							{ value: 'rem', label: 'rem' }
-						]}
-						isUnitSelectTabbable
-						__nextHasNoMarginBottom
-						isResetValueOnUnitChange
-						
-					/>
-
-					{/* Align Einstellungen (wide/full) */}
-					<SelectControl
-						label={__('Ausrichtung', 'wp-amjl-custom-blocks')}
-						value={align}
-						onChange={(value) => setAttributes({ align: value })}
-						options={[
-							{ label: __('Standard', 'wp-amjl-custom-blocks'), value: '' },
-							{ label: __('Breit (Wide)', 'wp-amjl-custom-blocks'), value: 'alignwide' },
-							{ label: __('Vollbreite (Full)', 'wp-amjl-custom-blocks'), value: 'alignfull' }
-						]}
-					/>
-				</PanelBody>
-				<PanelBody title='Navigation Einstellungen' initialOpen={false}>
-					<h3>{__('Navigation Einstellungen', 'wp-amjl-custom-blocks')}</h3>
-
-					{/* Navigation Arrows Toggle */}
-					<ToggleControl
-						label={__('Navigation Arrows', 'wp-amjl-custom-blocks')}
-						checked={showNavigation}
-						onChange={(value) => setAttributes({ showNavigation: value })}
-					/>
-
-					{showNavigation && (
-						<>
-							<ToggleGroupControl
-								label={__('Position Presets', 'wp-amjl-custom-blocks')}
-								value={navigationPosition}
-								onChange={(value) => setAttributes({ navigationPosition: value })}
-								isBlock
-							>
-								<ToggleGroupControlOption value="standard" label="Standard" icon={justifyStretch} />
-								<ToggleGroupControlOption value="bottom-center" label="Unten Mitte" icon={alignCenter} />
-								<ToggleGroupControlOption value="bottom-left" label="Unten Links" icon={alignLeft}/>
-								<ToggleGroupControlOption value="bottom-right" label="Unten Rechts" icon= {alignRight}/>
-							</ToggleGroupControl>
-							<RangeControl
-								label={__('X-Verschiebung (px)', 'wp-amjl-custom-blocks')}
-								value={navigationOffsetX}
-								onChange={(value) => setAttributes({ navigationOffsetX: value })}
-								min={-200}
-								max={200}
-							/>
-							<RangeControl
-								label={__('Y-Verschiebung (px)', 'wp-amjl-custom-blocks')}
-								value={navigationOffsetY}
-								onChange={(value) => setAttributes({ navigationOffsetY: value })}
-								min={-200}
-								max={200}
-							/>
-							<UnitControl
-								label={__('Navigation Größe', 'wp-amjl-custom-blocks')}
-								value={navigationSize}
-								onChange={(value) => setAttributes({ navigationSize: value })}
-								units={[
-									{ value: 'px', label: 'px', default: 44 },
-									{ value: '%', label: '%', default: 10 },
-									{ value: 'vh', label: 'vh', default: 10 },
-									{ value: 'vw', label: 'vw', default: 10},
-									{ value: 'em', label: 'em', default: 1 },
-									{ value: 'rem', label: 'rem', default:1 }
-								]}
-								isUnitSelectTabbable
-								__nextHasNoMarginBottom
-							/>
-						</>
-					)}
-				</PanelBody>
-				<PanelBody title={__('Pagination Einstellungen', 'wp-amjl-custom-blocks')} initialOpen={false}>
-					{/* Pagination Toggle */}
-					<ToggleControl
-						label={__('Pagination', 'wp-amjl-custom-blocks')}
-						checked={showPagination}
-						onChange={(value) => setAttributes({ showPagination: value })}
-					/>
-					{ showPagination && (
-						<>
-							<RangeControl
-								label={__('Y-Verschiebung (px)', 'wp-amjl-custom-blocks')}
-								value={paginationOffsetY}
-								onChange={(value) => setAttributes({ paginationOffsetY: value })}
-								currentInput={8}
-								min={-200}
-								max={200}
-								allowReset
-								resetFallbackValue={8}
-							/>
-							<UnitControl
-								label={__('Bullet Größe', 'wp-amjl-custom-blocks')}
-								value={paginationBulletSize}
-								onChange={(value) => setAttributes({ paginationBulletSize: value })}
-								units={[
-									{ value: 'px', label: 'px', default: 8 }
-								]}
-								isUnitSelectTabbable
-								isResetValueOnUnitChange
-								__nextHasNoMarginBottom
-							/>
-							<RangeControl
-								label={__('Bulletabstand X', 'wp-amjl-custom-blocks')}
-								value={paginationBulletHorizontalGap}
-								onChange={(value) => setAttributes({ paginationBulletHorizontalGap: value })}
-								currentInput={4}
-								min={0}
-								max={200}
-								allowReset
-								resetFallbackValue={4}
-							/>
-							<RangeControl
-								label={__('Bulletabstand Y', 'wp-amjl-custom-blocks')}
-								value={paginationBulletVerticalGap}
-								onChange={(value) => setAttributes({ paginationBulletVerticalGap: value })}
-								currentInput={6}
-								min={0}
-								max={200}
-								allowReset
-								resetFallbackValue={6}
-							/>
-						</>
-					)}							
-				</PanelBody>
-			</InspectorControls>
+			<SwiperSettingsPanel attributes={attributes} setAttributes={setAttributes} />
+			<SwiperStylesPanel attributes={attributes} setAttributes={setAttributes} />
+			
 
 			{/* Swiper Block Rendering */}
-			
 			<div {...blockProps} ref={wrapperRef}>
 				<div {...innerBlocksProps} />
-				{showNavigation && (
+				{attributes.showNavigation && (
 				<div className="swiper-button-prev"></div>
 				)}
-				{showNavigation && (
+				{attributes.showNavigation && (
 					<div className="swiper-button-next"></div>
 				)}
-				{showPagination && (
+				{attributes.showPagination && (
 					<div className="swiper-pagination"></div>
 				)}	
 			</div>

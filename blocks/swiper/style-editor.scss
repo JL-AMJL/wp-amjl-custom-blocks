@@ -5,3 +5,9 @@
 .wp-block-amjl-swiper .swiper-slide {
     margin-block-start: auto !important;
   }
+
+  .color-tab-panel .components-tab-panel__tabs .active-tab {
+    font-weight: bold;
+    border-bottom: 2px solid #0073aa; /* Add a bottom border to indicate the active tab */
+    color: #0073aa; /* Change the text color for the active tab */
+}

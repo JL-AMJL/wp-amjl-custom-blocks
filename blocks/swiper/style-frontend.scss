@@ -7,18 +7,23 @@
 	height: 100%;
 }
 
-/* --- Navigation Position Styles --- */
+/* --- Swiper Variables Fallback --- */
 :root {
 	--swiper-navigation-sides-offset: 0px; /* fallback */
 	--swiper-navigation-top-offset: 0px;
+}
+
+/* --- Swiper Navigation Colors --- */
+.swiper-button-prev:hover,
+.swiper-button-next:hover{
+	color: var(--amjl-swiper-navigation-hover-color, var(--swiper-navigation-color)) ;
 }
 
 /* Navigation Position Presets */
 .nav-position-standard .swiper-button-prev,
 .nav-position-standard .swiper-button-next {
 	top: 50%;
-	transform: translateY(-50%);
-	transform: translateY(var(--swiper-navigation-top-offset));
+	transform: translateY(calc(var(--swiper-navigation-size) * -0.5 + var(--swiper-navigation-top-offset)));
 }
 
 .nav-position-bottom-center .swiper-button-prev,

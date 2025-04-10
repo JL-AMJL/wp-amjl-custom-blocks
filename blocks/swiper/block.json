@@ -132,6 +132,26 @@
 		"paginationBulletVerticalGap":{
       "type": "string",
       "default": 6
+    },
+    "navigationColor": {
+      "type": "string",
+      "default": ""
+    },
+    "navigationHoverColor": {
+      "type": "string",
+      "default": ""
+    },
+    "paginationActiveColor": {
+      "type": "string",
+      "default": ""
+    },
+    "paginationInactiveColor": {
+      "type": "string",
+      "default": ""
+    },
+    "paginationInactiveOpacity": {
+      "type": "number",
+      "default": 0.2
     }
   },
   "innerBlocks": ["amjl/swiper-slide"]

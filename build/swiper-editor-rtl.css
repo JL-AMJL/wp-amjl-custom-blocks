@@ -862,18 +862,23 @@ button.swiper-pagination-bullet {
   height: 100%;
 }
 
-/* --- Navigation Position Styles --- */
+/* --- Swiper Variables Fallback --- */
 :root {
   --swiper-navigation-sides-offset: 0px; /* fallback */
   --swiper-navigation-top-offset: 0px;
+}
+
+/* --- Swiper Navigation Colors --- */
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: var(--amjl-swiper-navigation-hover-color, var(--swiper-navigation-color));
 }
 
 /* Navigation Position Presets */
 .nav-position-standard .swiper-button-prev,
 .nav-position-standard .swiper-button-next {
   top: 50%;
-  transform: translateY(-50%);
-  transform: translateY(var(--swiper-navigation-top-offset));
+  transform: translateY(calc(var(--swiper-navigation-size) * -0.5 + var(--swiper-navigation-top-offset)));
 }
 
 .nav-position-bottom-center .swiper-button-prev,
@@ -936,4 +941,10 @@ button.swiper-pagination-bullet {
 
 .wp-block-amjl-swiper .swiper-slide {
   margin-block-start: auto !important;
+}
+
+.color-tab-panel .components-tab-panel__tabs .active-tab {
+  font-weight: bold;
+  border-bottom: 2px solid #0073aa; /* Add a bottom border to indicate the active tab */
+  color: #0073aa; /* Change the text color for the active tab */
 }

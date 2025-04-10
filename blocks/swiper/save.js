@@ -1,51 +1,17 @@
-import { useSelect } from '@wordpress/data';
-import { useBlockProps, InnerBlocks, getBlockAttributes } from '@wordpress/block-editor';
+import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
+import { generateClassName, generateDataAttributes, generateStyles } from './utils';
 
 export default function save({ attributes }) {
-	const {
-		autoplay,
-		autoplaySpeed,
-		slidesPerView,
-		showNavigation,
-		showPagination,
-		isLoop,
-		align,
-		height,
-		navigationPosition,
-		navigationOffsetX,
-		navigationOffsetY,
-        navigationSize,
-		paginationOffsetY,
-		paginationBulletSize,
-		paginationBulletHorizontalGap,
-		paginationBulletVerticalGap
-	} = attributes;
 
-	const style = {
-        ...(height ? { height } : {}),
-        ...(navigationOffsetX ? { '--swiper-navigation-sides-offset': `${navigationOffsetX}px` } : {}),
-        ...(navigationOffsetY ? { '--swiper-navigation-top-offset': `${navigationOffsetY}px` } : {}),
-        ...(navigationSize ? {'--swiper-navigation-size': `${navigationSize}`} : {}),
-		...(paginationOffsetY ? {'--swiper-pagination-bottom': `${paginationOffsetY}px`} : {}),
-		...(paginationBulletSize ? {'--swiper-pagination-bullet-size': `${paginationBulletSize}`} : {}),
-		...(paginationBulletHorizontalGap ? {'--swiper-pagination-bullet-horizontal-gap': `${paginationBulletHorizontalGap}px`} : {}),
-		...(paginationBulletVerticalGap ? {'--swiper-pagination-bullet-vertical-gap': `${paginationBulletVerticalGap}px`} : {})
-    };    
+	const style = generateStyles(attributes);
+    const className = generateClassName(attributes);
+    const dataAttributes = generateDataAttributes(attributes);
 
     const blockProps = useBlockProps.save({
-    className: [
-        'swiper swiper-container',
-        align,
-        showNavigation ? 'has-swiper-navigation' : '',
-        showPagination ? 'has-swiper-pagination' : '',
-        navigationPosition ? `nav-position-${navigationPosition}` : ''
-    ].filter(Boolean).join(' '),
-    style: Object.keys(style).length ? style : undefined,
-    'data-autoplay': autoplay,
-    'data-autoplay-speed': autoplaySpeed,
-    'data-slides-per-view': slidesPerView,
-    'data-loop': isLoop,
-});
+    style,
+    className,
+    ...(dataAttributes)
+    });
 
     return (
         <div {...blockProps} >
@@ -53,15 +19,15 @@ export default function save({ attributes }) {
                 {/* Die InnerBlocks.Content sorgt dafür, dass die inneren Slides gespeichert werden */}
                 <InnerBlocks.Content />
             </div>
-            {showNavigation && (
+            {attributes.showNavigation && (
             <div className="swiper-button-prev"></div>
             )}
 
-            {showNavigation && (
+            {attributes.showNavigation && (
                 <div className="swiper-button-next"></div>
             )}
 
-            {showPagination && (
+            {attributes.showPagination && (
                 <div className="swiper-pagination"></div>
             )}
         </div>
