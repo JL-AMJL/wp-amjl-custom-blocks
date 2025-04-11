@@ -24,6 +24,7 @@
     "@wordpress/scripts": "^30.14.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "swiper": "^11.2.6"
   }
 }
