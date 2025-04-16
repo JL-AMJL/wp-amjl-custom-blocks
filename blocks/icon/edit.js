@@ -8,6 +8,7 @@ export default function Edit({ attributes, setAttributes }) {
     const blockProps = useBlockProps();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filter, setFilter] = useState('');
+    const [tempSelectedIcon, setTempSelectedIcon] = useState(attributes.selectedIcon);
     const [categoryFilter, setCategoryFilter] = useState(null);
     const [styleFilter, setStyleFilter] = useState(() => {
         const iconKey = attributes.selectedIcon ?? '';
@@ -74,7 +75,10 @@ export default function Edit({ attributes, setAttributes }) {
                         )}
                         <Button
                             variant="secondary"
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={() => {
+                                setTempSelectedIcon(attributes.selectedIcon);
+                                setIsModalOpen(true);
+                            }}
                             style={{ width: '100%' }}
                         >
                             {attributes.selectedIcon ? 'Change Icon' : 'Select Icon'}
@@ -93,16 +97,11 @@ export default function Edit({ attributes, setAttributes }) {
                 <Modal
                     title="Select an Icon"
                     onRequestClose={() => setIsModalOpen(false)}
-                    className="amjl-icon-modal"
+                    className="amjl-icon-modal components-modal__content"
+                    style={{ width: '90vw', height: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}
                 >
-                    <div style={{
-                        width: '90vw',
-                        height: '80vh',
-                        margin: '0 auto',
-                        display: 'flex',
-                        flexDirection: 'column'
-                    }}>
-                        <div className="components-tab-panel__tabs">
+                    <div style={{ position: 'sticky', top: 0, zIndex: 20, background: '#fff', boxShadow: 'none' }}>
+                        <div className="components-tab-panel__tabs" style={{ padding: '10px 12px' }}>
                             {['solid', 'regular', 'brands'].map((tabName) => (
                                 <button
                                     key={tabName}
@@ -117,7 +116,7 @@ export default function Edit({ attributes, setAttributes }) {
                             ))}
                         </div>
 
-                        <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        <div style={{ padding: '0 12px 10px 12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                             {[...new Set(Object.values(icons).flatMap(icon => icon.c || []))].map((cat) => (
                                 <Button
                                     key={cat}
@@ -129,71 +128,76 @@ export default function Edit({ attributes, setAttributes }) {
                             ))}
                         </div>
 
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            background: '#fff',
-                            border: '1px solid #ccc',
-                            borderRadius: '2px',
-                            padding: '0 8px',
-                            height: '30px',
-                            marginBottom: '12px'
-                        }}>
-                            <Icon icon={search} style={{ marginRight: '6px' }} />
-                            <input
-                                type="search"
-                                value={filter}
-                                onChange={(e) => setFilter(e.target.value)}
-                                placeholder="Search icons…"
-                                style={{
-                                border: 'none',
-                                outline: 'none',
-                                boxShadow: 'none',
-                                flex: 1,
-                                fontSize: '13px',
-                                background: 'transparent'
-                            }}
-                            />
+                        <div style={{ padding: '0 12px 12px 12px' }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                background: '#fff',
+                                border: '1px solid #ccc',
+                                borderRadius: '2px',
+                                padding: '0 8px',
+                                height: '30px'
+                            }}>
+                                <Icon icon={search} style={{ marginRight: '6px' }} />
+                                <input
+                                    type="search"
+                                    value={filter}
+                                    onChange={(e) => setFilter(e.target.value)}
+                                    placeholder="Search icons…"
+                                    style={{
+                                        border: 'none',
+                                        outline: 'none',
+                                        boxShadow: 'none',
+                                        flex: 1,
+                                        fontSize: '13px',
+                                        background: 'transparent'
+                                    }}
+                                />
+                            </div>
                         </div>
+                    </div>
 
-                        <div style={{
-                            flex: '1 1 auto',
-                            overflowY: 'auto',
-                            marginTop: '10px',
-                            display: 'grid',
-                            gridTemplateColumns: 'repeat(auto-fill, 50px)',
-                            gridAutoRows: '70px',
-                            gap: '10px',
-                            justifyContent: 'start',
-                            alignContent: 'start'
-                        }}>
-                            {filteredIcons.map((icon) => {
-                                const iconClassName = `${icon}-${styleFilter}`;
-                                const styleClass = styleClassMap[styleFilter];
-                                return (
-                                    <Button
-                                        key={iconClassName}
-                                        onClick={() => {
-                                            setAttributes({ selectedIcon: iconClassName });
-                                            setIsModalOpen(false);
-                                        }}
-                                        style={{
-                                            width: '50px',
-                                            height: '70px',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            justifyContent: 'flex-start',
-                                            alignItems: 'center',
-                                            gap: '4px',
-                                            padding: 0
-                                        }}
-                                    >
-                                        <i className={`amjl-${styleClass} amjl-${icon}`}></i>
-                                        <span style={{ fontSize: '10px', textAlign: 'center', lineHeight: '1' }}>{icon}</span>
-                                    </Button>
-                                );
-                            })}
-                        </div>
+                    <div style={{ flex: '1 1 auto', overflowY: 'auto', position: 'relative', zIndex: 1, padding: '20px 12px 0 12px', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, 50px)', gridAutoRows: '70px', gap: '10px', justifyContent: 'start', alignContent: 'start' }}>
+                        {filteredIcons.map((icon) => {
+                            const iconClassName = `${icon}-${styleFilter}`;
+                            const styleClass = styleClassMap[styleFilter];
+                            const isSelected = tempSelectedIcon === iconClassName;
+                            return (
+                                <Button
+                                    key={iconClassName}
+                                    onClick={() => setTempSelectedIcon(iconClassName)}
+                                    style={{
+                                    width: '50px',
+                                    height: '64px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '4px',
+                                    padding: '4px',
+                                    border: isSelected ? '1px solid #007cba' : '1px solid transparent',
+                                    borderRadius: '4px',
+                                    backgroundColor: isSelected ? 'rgba(0, 123, 186, 0.08)' : 'transparent',
+                                    transition: 'border 0.15s ease, background-color 0.15s ease'
+                                }}
+                                >
+                                    <i className={`amjl-${styleClass} amjl-${icon}`} style={{ marginTop: '2px' }}></i>
+                                    <span style={{ fontSize: '10px', textAlign: 'center', lineHeight: '1' }}>{icon}</span>
+                                </Button>
+                            );
+                        })}
+                    </div>
+
+                    <div style={{ position: 'sticky', bottom: 0, zIndex: 20, background: '#fff', boxShadow: 'none', padding: '12px', display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                setAttributes({ selectedIcon: tempSelectedIcon });
+                                setIsModalOpen(false);
+                            }}
+                            disabled={!tempSelectedIcon}
+                        >
+                            Confirm Selection
+                        </Button>
                     </div>
                 </Modal>
             )}

@@ -1,0 +1,1 @@
+{"version":3,"file":"./style-icon.css","mappings":";;;AAEA;EACC;EACG;AAAJ,C","sources":["webpack://wp-amjl-custom-blocks/./blocks/icon/style.scss"],"sourcesContent":["@import './libraries/wp-amjl-iconfont.css';\r\n\r\n.components-modal__content {\r\n\tpadding-top: 0 !important;\r\n    padding-bottom: 0 !important;\r\n}"],"names":[],"sourceRoot":""}

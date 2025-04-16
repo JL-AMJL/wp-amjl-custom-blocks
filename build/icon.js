@@ -36,6 +36,7 @@ function Edit({
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)();
   const [isModalOpen, setIsModalOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [filter, setFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
+  const [tempSelectedIcon, setTempSelectedIcon] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(attributes.selectedIcon);
   const [categoryFilter, setCategoryFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [styleFilter, setStyleFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(() => {
     var _attributes$selectedI;
@@ -107,7 +108,10 @@ function Edit({
             children: "No icon selected"
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
             variant: "secondary",
-            onClick: () => setIsModalOpen(true),
+            onClick: () => {
+              setTempSelectedIcon(attributes.selectedIcon);
+              setIsModalOpen(true);
+            },
             style: {
               width: '100%'
             },
@@ -120,20 +124,31 @@ function Edit({
       children: attributes.selectedIcon && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
         className: `amjl-${currentStyleClass} amjl-${baseIcon}`
       })
-    }), isModalOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Modal, {
+    }), isModalOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Modal, {
       title: "Select an Icon",
       onRequestClose: () => setIsModalOpen(false),
-      className: "amjl-icon-modal",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+      className: "amjl-icon-modal components-modal__content",
+      style: {
+        width: '90vw',
+        height: '80vh',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        padding: 0
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
         style: {
-          width: '90vw',
-          height: '80vh',
-          margin: '0 auto',
-          display: 'flex',
-          flexDirection: 'column'
+          position: 'sticky',
+          top: 0,
+          zIndex: 20,
+          background: '#fff',
+          boxShadow: 'none'
         },
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
           className: "components-tab-panel__tabs",
+          style: {
+            padding: '10px 12px'
+          },
           children: ['solid', 'regular', 'brands'].map(tabName => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("button", {
             className: 'components-tab-panel__tabs-item' + (tabName === styleFilter ? ' is-active' : ''),
             onClick: () => setStyleFilter(tabName),
@@ -142,8 +157,7 @@ function Edit({
           }, tabName))
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
           style: {
-            marginTop: '10px',
-            marginBottom: '10px',
+            padding: '0 12px 10px 12px',
             display: 'flex',
             flexWrap: 'wrap',
             gap: '8px'
@@ -153,82 +167,112 @@ function Edit({
             onClick: () => setCategoryFilter(cat === categoryFilter ? null : cat),
             children: cat
           }, cat))
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-          style: {
-            display: 'flex',
-            alignItems: 'center',
-            background: '#fff',
-            border: '1px solid #ccc',
-            borderRadius: '2px',
-            padding: '0 8px',
-            height: '30px',
-            marginBottom: '12px'
-          },
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
-            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"],
-            style: {
-              marginRight: '6px'
-            }
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-            type: "search",
-            value: filter,
-            onChange: e => setFilter(e.target.value),
-            placeholder: "Search icons\u2026",
-            style: {
-              border: 'none',
-              outline: 'none',
-              boxShadow: 'none',
-              flex: 1,
-              fontSize: '13px',
-              background: 'transparent'
-            }
-          })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
           style: {
-            flex: '1 1 auto',
-            overflowY: 'auto',
-            marginTop: '10px',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, 50px)',
-            gridAutoRows: '70px',
-            gap: '10px',
-            justifyContent: 'start',
-            alignContent: 'start'
+            padding: '0 12px 12px 12px'
           },
-          children: filteredIcons.map(icon => {
-            const iconClassName = `${icon}-${styleFilter}`;
-            const styleClass = styleClassMap[styleFilter];
-            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
-              onClick: () => {
-                setAttributes({
-                  selectedIcon: iconClassName
-                });
-                setIsModalOpen(false);
-              },
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+            style: {
+              display: 'flex',
+              alignItems: 'center',
+              background: '#fff',
+              border: '1px solid #ccc',
+              borderRadius: '2px',
+              padding: '0 8px',
+              height: '30px'
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"],
               style: {
-                width: '50px',
-                height: '70px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                gap: '4px',
-                padding: 0
-              },
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-                className: `amjl-${styleClass} amjl-${icon}`
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
-                style: {
-                  fontSize: '10px',
-                  textAlign: 'center',
-                  lineHeight: '1'
-                },
-                children: icon
-              })]
-            }, iconClassName);
+                marginRight: '6px'
+              }
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+              type: "search",
+              value: filter,
+              onChange: e => setFilter(e.target.value),
+              placeholder: "Search icons\u2026",
+              style: {
+                border: 'none',
+                outline: 'none',
+                boxShadow: 'none',
+                flex: 1,
+                fontSize: '13px',
+                background: 'transparent'
+              }
+            })]
           })
         })]
-      })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        style: {
+          flex: '1 1 auto',
+          overflowY: 'auto',
+          position: 'relative',
+          zIndex: 1,
+          padding: '20px 12px 0 12px',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, 50px)',
+          gridAutoRows: '70px',
+          gap: '10px',
+          justifyContent: 'start',
+          alignContent: 'start'
+        },
+        children: filteredIcons.map(icon => {
+          const iconClassName = `${icon}-${styleFilter}`;
+          const styleClass = styleClassMap[styleFilter];
+          const isSelected = tempSelectedIcon === iconClassName;
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+            onClick: () => setTempSelectedIcon(iconClassName),
+            style: {
+              width: '50px',
+              height: '64px',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '4px',
+              border: isSelected ? '1px solid #007cba' : '1px solid transparent',
+              borderRadius: '4px',
+              backgroundColor: isSelected ? 'rgba(0, 123, 186, 0.08)' : 'transparent',
+              transition: 'border 0.15s ease, background-color 0.15s ease'
+            },
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
+              className: `amjl-${styleClass} amjl-${icon}`,
+              style: {
+                marginTop: '2px'
+              }
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
+              style: {
+                fontSize: '10px',
+                textAlign: 'center',
+                lineHeight: '1'
+              },
+              children: icon
+            })]
+          }, iconClassName);
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+        style: {
+          position: 'sticky',
+          bottom: 0,
+          zIndex: 20,
+          background: '#fff',
+          boxShadow: 'none',
+          padding: '12px',
+          display: 'flex',
+          justifyContent: 'flex-end'
+        },
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          variant: "primary",
+          onClick: () => {
+            setAttributes({
+              selectedIcon: tempSelectedIcon
+            });
+            setIsModalOpen(false);
+          },
+          disabled: !tempSelectedIcon,
+          children: "Confirm Selection"
+        })
+      })]
     })]
   });
 }
