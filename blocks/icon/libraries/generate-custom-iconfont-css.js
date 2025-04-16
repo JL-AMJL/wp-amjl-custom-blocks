@@ -1,29 +1,33 @@
 const fs = require('fs');
 const path = require('path');
 
-// File paths
 const jsonFilePath = path.join(__dirname, 'filtered-icons.min.json');
 const cssFilePath = path.join(__dirname, 'wp-amjl-iconfont.css');
-
-// Read the JSON file
 const iconData = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
-// Start the CSS content
-let cssContent = `
-/* Define the font-face */
+const styleMap = {
+    solid: 's',
+    regular: 'r',
+    brands: 'b',
+};
+
+let cssContent = '';
+
+Object.entries(styleMap).forEach(([style, short]) => {
+    const fontFileName = `amjl-icon-${short}`;
+
+    cssContent += `
 @font-face {
-    font-family: 'wp-amjl-iconfont';
-    src: url('./fonts/wp-amjl-custom-iconfont.woff2') format('woff2'),
-         url('./fonts/wp-amjl-custom-iconfont.woff') format('woff'),
-         url('./fonts/wp-amjl-custom-iconfont.ttf') format('truetype'),
-         url('./fonts/wp-amjl-custom-iconfont.svg#wp-amjl-iconfont') format('svg');
+    font-family: '${fontFileName}';
+    src: url('./fonts/${fontFileName}.woff2') format('woff2'),
+         url('./fonts/${fontFileName}.woff') format('woff'),
+         url('./fonts/${fontFileName}.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Base class for the icon font */
-.amjl-icon {
-    font-family: 'wp-amjl-iconfont';
+.amjl-${short} {
+    font-family: '${fontFileName}';
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
@@ -35,18 +39,18 @@ let cssContent = `
     -moz-osx-font-smoothing: grayscale;
 }
 `;
+});
 
-// Generate CSS classes for each icon with the new prefix
-const prefix = 'amjl-';
 for (const [iconName, iconDetails] of Object.entries(iconData.icons)) {
     const unicode = iconDetails.u;
+    if (!unicode) continue;
+
     cssContent += `
-.${prefix}${iconName}:before {
+.amjl-${iconName}:before {
     content: '\\${unicode}';
 }
 `;
 }
 
-// Write the CSS file
 fs.writeFileSync(cssFilePath, cssContent, 'utf8');
 console.log(`CSS file generated at: ${cssFilePath}`);

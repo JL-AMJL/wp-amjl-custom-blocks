@@ -12,7 +12,7 @@
     "attributes": {
         "selectedIcon": {
             "type": "string",
-            "default": "ice-cream"
+            "default": "ice-cream-solid"
         },
         "iconSize": {
             "type": "string",

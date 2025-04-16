@@ -1,104 +1,67 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const { SVGIcons2SVGFontStream } = require('svgicons2svgfont'); // Import the correct class
+const { SVGIcons2SVGFontStream } = require('svgicons2svgfont');
 
-// Paths
-const filteredIconsPath = path.resolve('./blocks/icon/libraries/filtered-icons.min.json'); // Path to your filtered icons JSON
-const svgSourcePath = './node_modules/@fortawesome/fontawesome-free/svgs'; // Font Awesome SVG source
-const customIconsPath = './blocks/icon/libraries/custom-icons'; // Temporary folder for selected SVGs
-const outputFontPath = './blocks/icon/libraries/fonts'; // Output folder for the generated font
+const filteredIconsPath = path.resolve('./blocks/icon/libraries/filtered-icons.min.json');
+const svgSourcePath = './node_modules/@fortawesome/fontawesome-free/svgs';
+const customIconsPath = './blocks/icon/libraries/custom-icons';
+const outputFontPath = './blocks/icon/libraries/fonts';
 
-// Load filtered icons
 const filteredIcons = JSON.parse(fs.readFileSync(filteredIconsPath, 'utf8')).icons;
 
-// Ensure custom-icons and output font folders exist
-if (!fs.existsSync(customIconsPath)) {
-    fs.mkdirSync(customIconsPath, { recursive: true });
-}
-if (!fs.existsSync(outputFontPath)) {
-    fs.mkdirSync(outputFontPath, { recursive: true });
-}
+if (!fs.existsSync(customIconsPath)) fs.mkdirSync(customIconsPath, { recursive: true });
+if (!fs.existsSync(outputFontPath)) fs.mkdirSync(outputFontPath, { recursive: true });
 
-// Step 1: Copy SVGs for filtered icons
-console.log('Copying SVG files for filtered icons...');
-Object.keys(filteredIcons).forEach((iconName) => {
-    const styles = filteredIcons[iconName].s; // Styles (e.g., solid, regular)
-    styles.forEach((style) => {
-        const svgFilePath = path.join(svgSourcePath, style, `${iconName}.svg`);
-        if (fs.existsSync(svgFilePath)) {
-            const destPath = path.join(customIconsPath, `${iconName}-${style}.svg`);
-            fs.copyFileSync(svgFilePath, destPath);
-            console.log(`Copied: ${iconName} (${style})`);
-        } else {
-            console.warn(`SVG not found for: ${iconName} (${style})`);
-        }
+const styles = ['solid', 'regular', 'brands'];
+
+styles.forEach((style) => {
+    const fontName = `amjl-icon-${style[0]}`;
+    const svgFontPath = path.join(outputFontPath, `${fontName}.svg`);
+    const ttfFontPath = path.join(outputFontPath, `${fontName}.ttf`);
+
+    console.log(`Generating ${style} font...`);
+    const svgFontStream = fs.createWriteStream(svgFontPath);
+    const fontStream = new SVGIcons2SVGFontStream({
+        fontName,
+        normalize: true,
+        fontHeight: 1000,
     });
-});
 
-// Step 2: Generate SVG font
-console.log('Generating SVG font...');
-const svgFontStream = fs.createWriteStream(path.join(outputFontPath, 'wp-amjl-custom-iconfont.svg')); // Updated file name
-const fontStream = new SVGIcons2SVGFontStream({
-    fontName: 'wp-amjl-custom-iconfont', // Updated font name
-    normalize: true,
-    fontHeight: 1000,
-});
+    fontStream.pipe(svgFontStream);
 
-// Pipe the font stream to the SVG font file
-fontStream.pipe(svgFontStream);
+    Object.keys(filteredIcons).forEach((iconName) => {
+        const icon = filteredIcons[iconName];
+        if (!icon.s.includes(style) || !icon.u) return;
 
-// Write glyphs to the font stream
-fs.readdirSync(customIconsPath).forEach((file, index) => {
-    if (file.endsWith('.svg')) {
-        const glyph = fs.createReadStream(path.join(customIconsPath, file));
-        const name = file.replace('.svg', ''); // Use the full filename without the extension
-        const unicode = String.fromCharCode(0xe000 + index); // Generate a unique unicode value
+        const svgFilePath = path.join(svgSourcePath, style, `${iconName}.svg`);
+        if (!fs.existsSync(svgFilePath)) {
+            console.warn(`Missing SVG: ${iconName} (${style})`);
+            return;
+        }
 
-        glyph.metadata = { unicode: [unicode], name };
-        console.log('Writing glyph:', glyph.metadata);
+        const glyph = fs.createReadStream(svgFilePath);
+        const baseName = `${iconName}-${style}`;
+        const unicode = String.fromCharCode(parseInt(icon.u, 16));
+        glyph.metadata = { unicode: [unicode], name: baseName };
         fontStream.write(glyph);
-    }
-});
+        console.log(`Added ${baseName}`);
+    });
 
-// End the font stream
-fontStream.end();
+    fontStream.end();
 
-// Add event listeners to debug the process
-fontStream.on('error', (err) => {
-    console.error('Error during font generation:', err);
-});
+    svgFontStream.on('finish', () => {
+        console.log(`${style} SVG font written.`);
+        execSync(`npx svg2ttf ${svgFontPath} ${ttfFontPath}`);
+        execSync(`npx ttf2woff ${ttfFontPath} ${ttfFontPath.replace(/\.ttf$/, '.woff')}`);
+        console.log(`${style} TTF generated.`);
+    });
 
-svgFontStream.on('error', (err) => {
-    console.error('Error writing SVG font file:', err);
-});
+    fontStream.on('error', (err) => {
+        console.error(`Font stream error (${style}):`, err);
+    });
 
-svgFontStream.on('finish', () => {
-    console.log('SVG font file successfully written!');
-
-    // Step 3: Convert SVG font to TTF, WOFF, and WOFF2
-    console.log('Converting SVG font to TTF, WOFF, and WOFF2...');
-    const ttfFile = path.join(outputFontPath, 'wp-amjl-custom-iconfont.ttf');
-    const woffFile = path.join(outputFontPath, 'wp-amjl-custom-iconfont.woff');
-    const woff2File = path.join(outputFontPath, 'wp-amjl-custom-iconfont.woff2');
-
-    // Convert SVG to TTF
-    execSync(`npx svg2ttf ${path.join(outputFontPath, 'wp-amjl-custom-iconfont.svg')} ${ttfFile}`);
-    console.log('TTF font generated:', ttfFile);
-
-    // Convert TTF to WOFF
-    execSync(`npx ttf2woff ${ttfFile} ${woffFile}`);
-    console.log('WOFF font generated:', woffFile);
-
-    // Convert TTF to WOFF2 using fonttools
-    try {
-        console.log('Converting TTF to WOFF2 using fonttools...');
-        execSync(`pyftsubset ${ttfFile} --output-file=${woff2File} --flavor=woff2 --layout-features='*' --glyphs='*' --unicodes='*' --no-subset`);
-        console.log('WOFF2 font generated:', woff2File);
-    } catch (err) {
-        console.error('Failed to convert TTF to WOFF2 using fonttools:', err.message);
-        console.warn('Skipping WOFF2 conversion...');
-    }
-
-    console.log('Custom webfont generation completed successfully!');
+    svgFontStream.on('error', (err) => {
+        console.error(`SVG write error (${style}):`, err);
+    });
 });

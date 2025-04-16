@@ -1,17 +1,59 @@
 
-/* Define the font-face */
 @font-face {
-    font-family: 'wp-amjl-iconfont';
-    src: url('./fonts/wp-amjl-custom-iconfont.woff2') format('woff2'),
-         url('./fonts/wp-amjl-custom-iconfont.woff') format('woff'),
-         url('./fonts/wp-amjl-custom-iconfont.ttf') format('truetype');
+    font-family: 'amjl-icon-solid';
+    src: url('./fonts/amjl-icon-s.woff2') format('woff2'),
+         url('./fonts/amjl-icon-s.woff') format('woff'),
+         url('./fonts/amjl-icon-s.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-/* Base class for the icon font */
-.amjl-icon {
-    font-family: 'wp-amjl-iconfont';
+.amjl-s {
+    font-family: 'amjl-icon-solid';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+    font-family: 'amjl-icon-regular';
+    src: url('./fonts/amjl-icon-r.woff2') format('woff2'),
+         url('./fonts/amjl-icon-r.woff') format('woff'),
+         url('./fonts/amjl-icon-r.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.amjl-r {
+    font-family: 'amjl-icon-regular';
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: inline-block;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+@font-face {
+    font-family: 'amjl-icon-brands';
+    src: url('./fonts/amjl-icon-b.woff2') format('woff2'),
+         url('./fonts/amjl-icon-b.woff') format('woff'),
+         url('./fonts/amjl-icon-b.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.amjl-b {
+    font-family: 'amjl-icon-brands';
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
