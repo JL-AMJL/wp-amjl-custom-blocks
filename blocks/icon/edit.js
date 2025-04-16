@@ -1,7 +1,9 @@
 import { useBlockProps } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
 import { Button, Modal, TextControl } from '@wordpress/components';
-import iconsData from '../../scripts/output/filtered-icons.min.json'; // Import your filtered icons JSON
+import iconsData from './libraries/filtered-icons.min.json'; // Import your filtered icons JSON
+
+console.log('Loaded Icons Data:', iconsData);
 
 export default function Edit({ attributes, setAttributes }) {
     const blockProps = useBlockProps();
