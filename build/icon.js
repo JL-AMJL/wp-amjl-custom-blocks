@@ -34,6 +34,7 @@ function Edit({
   const blockProps = (0,_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps)();
   const [isModalOpen, setIsModalOpen] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [filter, setFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)('');
+  const [categoryFilter, setCategoryFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   const [styleFilter, setStyleFilter] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.useState)(() => {
     var _attributes$selectedI;
     const iconKey = (_attributes$selectedI = attributes.selectedIcon) !== null && _attributes$selectedI !== void 0 ? _attributes$selectedI : '';
@@ -50,7 +51,8 @@ function Edit({
     const keywords = meta.k;
     const label = meta.l.toLowerCase();
     const matchesStyle = meta.s.includes(styleFilter);
-    return matchesStyle && (label.includes(filter.toLowerCase()) || keywords.some(keyword => keyword.includes(filter.toLowerCase())));
+    const matchesCategory = !categoryFilter || meta.c?.includes(categoryFilter);
+    return matchesStyle && matchesCategory && (label.includes(filter.toLowerCase()) || keywords.some(keyword => keyword.includes(filter.toLowerCase())));
   });
   const styleClassMap = {
     solid: 's',
@@ -136,8 +138,21 @@ function Edit({
             "aria-pressed": tabName === styleFilter,
             children: tabName.charAt(0).toUpperCase() + tabName.slice(1)
           }, tabName))
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+          style: {
+            marginTop: '10px',
+            marginBottom: '10px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '8px'
+          },
+          children: [...new Set(Object.values(icons).flatMap(icon => icon.c || []))].map(cat => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+            variant: cat === categoryFilter ? 'primary' : 'secondary',
+            onClick: () => setCategoryFilter(cat === categoryFilter ? null : cat),
+            children: cat
+          }, cat))
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
-          label: "Filter Icons",
+          label: "Search by name or keyword",
           value: filter,
           onChange: value => setFilter(value)
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {

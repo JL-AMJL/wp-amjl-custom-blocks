@@ -7,6 +7,7 @@ export default function Edit({ attributes, setAttributes }) {
     const blockProps = useBlockProps();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filter, setFilter] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState(null);
     const [styleFilter, setStyleFilter] = useState(() => {
         const iconKey = attributes.selectedIcon ?? '';
         const lastDash = iconKey.lastIndexOf('-');
@@ -24,7 +25,8 @@ export default function Edit({ attributes, setAttributes }) {
         const keywords = meta.k;
         const label = meta.l.toLowerCase();
         const matchesStyle = meta.s.includes(styleFilter);
-        return matchesStyle && (
+        const matchesCategory = !categoryFilter || meta.c?.includes(categoryFilter);
+        return matchesStyle && matchesCategory && (
             label.includes(filter.toLowerCase()) ||
             keywords.some((keyword) => keyword.includes(filter.toLowerCase()))
         );
@@ -114,8 +116,20 @@ export default function Edit({ attributes, setAttributes }) {
                             ))}
                         </div>
 
+                        <div style={{ marginTop: '10px', marginBottom: '10px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                            {[...new Set(Object.values(icons).flatMap(icon => icon.c || []))].map((cat) => (
+                                <Button
+                                    key={cat}
+                                    variant={cat === categoryFilter ? 'primary' : 'secondary'}
+                                    onClick={() => setCategoryFilter(cat === categoryFilter ? null : cat)}
+                                >
+                                    {cat}
+                                </Button>
+                            ))}
+                        </div>
+
                         <TextControl
-                            label="Filter Icons"
+                            label="Search by name or keyword"
                             value={filter}
                             onChange={(value) => setFilter(value)}
                         />
