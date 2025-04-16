@@ -1,6 +1,7 @@
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
-import { PanelBody, Button, Modal, TextControl } from '@wordpress/components';
+import { PanelBody, Button, Modal, TextControl, Icon } from '@wordpress/components';
+import { search } from '@wordpress/icons';
 import iconsData from './libraries/filtered-icons.min.json';
 
 export default function Edit({ attributes, setAttributes }) {
@@ -128,11 +129,33 @@ export default function Edit({ attributes, setAttributes }) {
                             ))}
                         </div>
 
-                        <TextControl
-                            label="Search by name or keyword"
-                            value={filter}
-                            onChange={(value) => setFilter(value)}
-                        />
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            background: '#fff',
+                            border: '1px solid #ccc',
+                            borderRadius: '2px',
+                            padding: '0 8px',
+                            height: '30px',
+                            marginBottom: '12px'
+                        }}>
+                            <Icon icon={search} style={{ marginRight: '6px' }} />
+                            <input
+                                type="search"
+                                value={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                                placeholder="Search icons…"
+                                style={{
+                                border: 'none',
+                                outline: 'none',
+                                boxShadow: 'none',
+                                flex: 1,
+                                fontSize: '13px',
+                                background: 'transparent'
+                            }}
+                            />
+                        </div>
+
                         <div style={{
                             flex: '1 1 auto',
                             overflowY: 'auto',
