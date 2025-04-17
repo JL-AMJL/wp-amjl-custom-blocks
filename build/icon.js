@@ -74,10 +74,10 @@ function Edit({
   const currentStyleClass = styleClassMap[currentStyle];
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.Fragment, {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.InspectorControls, {
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelBody, {
         title: "Icon",
         initialOpen: true,
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
           style: {
             display: 'flex',
             flexDirection: 'column',
@@ -124,12 +124,46 @@ function Edit({
             },
             children: attributes.selectedIcon ? 'Change Icon' : 'Select Icon'
           })]
-        })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.__experimentalUnitControl, {
+          label: "Icon Size",
+          value: attributes.iconSize,
+          onChange: value => setAttributes({
+            iconSize: value
+          }),
+          min: 0,
+          units: [{
+            value: 'px',
+            label: 'px',
+            default: 32
+          }, {
+            value: 'em',
+            label: 'em',
+            default: 2.0
+          }, {
+            value: 'rem',
+            label: 'rem',
+            default: 2.0
+          }, {
+            value: '%',
+            label: '%',
+            default: 100
+          }, {
+            value: 'vw',
+            label: 'vw',
+            default: 5
+          }],
+          isResetValueOnUnitChange: true,
+          isUnitSelectTabbable: true,
+          __nextHasNoMarginBottom: true
+        })]
       })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
       ...blockProps,
       children: attributes.selectedIcon && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("i", {
-        className: `amjl-${currentStyleClass} amjl-${baseIcon}`
+        className: `amjl-${currentStyleClass} amjl-${baseIcon}`,
+        style: {
+          fontSize: attributes.iconSize
+        }
       })
     }), isModalOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Modal, {
       title: "Select an Icon",
@@ -334,16 +368,27 @@ __webpack_require__.r(__webpack_exports__);
 function save({
   attributes
 }) {
+  var _selectedIcon$lastInd;
   const {
-    selectedIcon
+    selectedIcon,
+    iconSize
   } = attributes;
+  const lastDash = (_selectedIcon$lastInd = selectedIcon?.lastIndexOf('-')) !== null && _selectedIcon$lastInd !== void 0 ? _selectedIcon$lastInd : -1;
+  const baseIcon = selectedIcon?.slice(0, lastDash);
+  const style = selectedIcon?.slice(lastDash + 1);
+  const styleClassMap = {
+    solid: 's',
+    regular: 'r',
+    brands: 'b'
+  };
+  const styleClass = styleClassMap[style];
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
     ..._wordpress_block_editor__WEBPACK_IMPORTED_MODULE_0__.useBlockProps.save(),
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-      className: "amjl-icon",
-      children: selectedIcon && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("i", {
-        className: `fas fa-${selectedIcon}`
-      })
+    children: selectedIcon && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("i", {
+      className: `amjl-${styleClass} amjl-${baseIcon}`,
+      style: {
+        fontSize: iconSize
+      }
     })
   });
 }

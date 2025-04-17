@@ -17,9 +17,11 @@
 
 /* Mobile: show collapsible filter panel below tabs */
 @media (max-width: 782px) {
-	.amjl-icon-modal .amjl-sidebar {
-		/*display: none !important;*/
+	/*
+    .amjl-icon-modal .amjl-sidebar {
+		display: none !important;
 	}
+    */
 
 	.amjl-icon-modal .amjl-filter-panel--mobile {
 		display: block;

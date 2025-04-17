@@ -2,7 +2,7 @@
 
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
-import { PanelBody, Button, Modal, TextControl, Icon, RangeControl } from '@wordpress/components';
+import { PanelBody, Button, Modal, TextControl, Icon, RangeControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
 import { search, chevronDown, chevronUp } from '@wordpress/icons';
 import iconsData from './libraries/filtered-icons.min.json';
 
@@ -90,12 +90,28 @@ export default function Edit({ attributes, setAttributes }) {
                             {attributes.selectedIcon ? 'Change Icon' : 'Select Icon'}
                         </Button>
                     </div>
+                    <UnitControl
+                        label="Icon Size"
+                        value={attributes.iconSize}
+                        onChange={(value) => setAttributes({ iconSize: value })}
+                        min={0}
+                        units={[
+                            { value: 'px', label: 'px', default: 32 },
+                            { value: 'em', label: 'em', default: 2.0 },
+                            { value: 'rem', label: 'rem', default: 2.0 },
+                            { value: '%', label: '%', default: 100 },
+                            { value: 'vw', label: 'vw', default: 5 }                
+                        ]}
+                        isResetValueOnUnitChange
+                        isUnitSelectTabbable
+                        __nextHasNoMarginBottom
+                    />
                 </PanelBody>
             </InspectorControls>
 
             <div {...blockProps}>
                 {attributes.selectedIcon && (
-                    <i className={`amjl-${currentStyleClass} amjl-${baseIcon}`}></i>
+                    <i className={`amjl-${currentStyleClass} amjl-${baseIcon}`} style={{ fontSize: attributes.iconSize }}></i>
                 )}
             </div>
 
