@@ -1,0 +1,18 @@
+{
+  "apiVersion": 3,
+  "name": "amjl/buttons",
+  "title": "Buttons (AMJL)",
+  "category": "design",
+  "description": "Container für AMJL Buttons.",
+  "icon": {
+    "src": "button",
+    "foreground": "#1e88e5"
+  },
+  "supports": {
+    "html": false
+  },
+  "attributes": {},
+  "example": {},
+  "editorScript": "file:../../build/buttons.js",
+  "style": "file:../../build/style-buttons.css"
+}

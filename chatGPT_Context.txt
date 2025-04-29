@@ -1,0 +1,58 @@
+**ChatGPT Notiz: Zusammenfassung der bisherigen Icon-Block-Konversation (April 2025)**
+
+---
+
+**Projekt:** WordPress Gutenberg Icon Block ("amjl/icon")
+
+**Ziel:** Erstellung eines flexiblen, sauberen, Theme-kompatiblen Icon-Blocks, der eine eigene Icon-Font (Custom Subset) nutzt.
+
+---
+
+**Was wurde erreicht:**
+
+1. **Icon-Auswahl:**
+    - Auswahl des Icons erfolgt nicht mehr direkt im Block, sondern im Inspector Panel.
+    - Das aktuell ausgewählte Icon wird groß im Inspector angezeigt (Transparenzraster).
+    - Modal-Dialog für die Icon-Auswahl mit Tabs (Solid, Regular, Brands), Kategorienfilter und Suchfeld.
+
+2. **Modal-Optimierungen:**
+    - Modal hat feste, responsive Größe (breite und höhe: 90vw / 80vh).
+    - Header (Tabs, Suche) und Footer (Confirm-Button) sind sticky.
+    - Das Icon-Grid skaliert dynamisch je nach Preview-Größe (kein Überlappen, kein Chaos).
+
+3. **Filtering:**
+    - Kategorienfilter über Buttons.
+    - Suchfeld mit Such-Icon innerhalb des Input-Felds.
+    - Mobile-Variante verworfen, Fokus auf reine Desktop-Seitenleiste.
+
+4. **Styling und Struktur:**
+    - Auswahlmarkierung für Icons verbessert (dezenter Rand, klarer Fokus, keine unruhigen Schatten).
+    - Einheitliche, saubere Flexbox-Struktur für Sidebar und Grid.
+
+5. **Theme-Kompatibilität:**
+    - Icon-Farbe wird über die WordPress Theme-Farbpalette ausgewählt (ColorPalette).
+    - Es wird NICHT der HEX-Wert gespeichert, sondern der Farb-Slug ("primary", "secondary" etc.).
+    - Ausgabe erfolgt über CSS-Variablen (`var(--wp--preset--color--slug)`).
+
+6. **Attribute und Speichern:**
+    - Neue Attribute: `selectedIcon`, `iconSize`, `iconColorSlug` (kein `iconColor` mehr).
+    - Save.js passt Icon-Class, -Größe und -Farbe korrekt an.
+    - Keine unnötigen Inline-Styles, sauber und wartbar.
+
+7. **Technische Verbesserungen:**
+    - Keine Nutzung unnötiger externer Libraries (nur WordPress eigene Pakete).
+    - Keine Custom Colors erlaubt (Theme-Konsistenz).
+    - Struktur der Komponente modular und logisch aufgebaut.
+
+---
+
+**Hinweise an mich selbst:**
+- Diese Zusammenfassung bitte zeigen, wenn im neuen Chat Kontext fehlt.
+- Nutzer will saubere, modulare, best-practice Umsetzung, keine Zwischenlösungen.
+- Nachfragen nur wenn unbedingt nötig, ansonsten gewünschte Schritte selbstständig korrekt ausführen.
+- Fokus auf perfekte Einhaltung der WordPress-Gutenberg-Standards.
+
+---
+
+**Ende der Notiz**
+
