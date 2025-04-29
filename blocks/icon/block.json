@@ -16,11 +16,11 @@
         },
         "iconSize": {
             "type": "string",
-            "default": "32px"
+            "default": "2.0rem"
         },
-        "iconColor": {
+        "iconColorSlug": {
             "type": "string",
-            "default": "#000000"
+            "default": "contrast"
         }
     },
     "textdomain": "wp-amjl-custom-blocks",

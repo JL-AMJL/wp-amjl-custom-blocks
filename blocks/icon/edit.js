@@ -1,8 +1,6 @@
-// CLEAN VERSION: Only sidebar, no mobile filter panel
-
-import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { useBlockProps, InspectorControls, useSetting } from '@wordpress/block-editor';
 import { useState } from '@wordpress/element';
-import { PanelBody, Button, Modal, TextControl, Icon, RangeControl, __experimentalUnitControl as UnitControl } from '@wordpress/components';
+import { PanelBody, Button, Modal, TextControl, Icon, RangeControl, __experimentalUnitControl as UnitControl, ColorPalette } from '@wordpress/components';
 import { search, chevronDown, chevronUp } from '@wordpress/icons';
 import iconsData from './libraries/filtered-icons.min.json';
 
@@ -26,6 +24,8 @@ export default function Edit({ attributes, setAttributes }) {
     const [isCategoryPanelOpen, setIsCategoryPanelOpen] = useState(false);
 
     const icons = iconsData.icons;
+
+    const themeColors = useSetting('color.palette') || [];
 
     const filteredIcons = Object.keys(icons).filter((icon) => {
         const meta = icons[icon];
@@ -72,7 +72,7 @@ export default function Edit({ attributes, setAttributes }) {
                             }}>
                                 <i
                                     className={`amjl-${currentStyleClass} amjl-${baseIcon}`}
-                                    style={{ fontSize: '128px' }}
+                                    style={{ fontSize: '128px', color: attributes.iconColor }}
                                 ></i>
                             </div>
                         ) : (
@@ -89,7 +89,24 @@ export default function Edit({ attributes, setAttributes }) {
                         >
                             {attributes.selectedIcon ? 'Change Icon' : 'Select Icon'}
                         </Button>
+
+                        <span style={{ fontSize: '11px', fontWeight: 500, lineHeight: '1.4', textTransform: 'uppercase' }}>Icon Color</span>
+                        <ColorPalette colors={themeColors}
+                            label="Icon Color"
+                            value={attributes.iconColorSlug ? themeColors.find(c => c.slug === attributes.iconColorSlug)?.color : undefined}
+                            onChange={(value) => {
+                                const selected = themeColors.find((c) => c.color === value);
+                                if (selected) {
+                                    setAttributes({ iconColorSlug: selected.slug });
+                                } else {
+                                    setAttributes({ iconColorSlug: null });
+                                }
+                            }}
+                            disableCustomColors
+                            clearable
+                        />
                     </div>
+
                     <UnitControl
                         label="Icon Size"
                         value={attributes.iconSize}
@@ -100,7 +117,7 @@ export default function Edit({ attributes, setAttributes }) {
                             { value: 'em', label: 'em', default: 2.0 },
                             { value: 'rem', label: 'rem', default: 2.0 },
                             { value: '%', label: '%', default: 100 },
-                            { value: 'vw', label: 'vw', default: 5 }                
+                            { value: 'vw', label: 'vw', default: 5 }
                         ]}
                         isResetValueOnUnitChange
                         isUnitSelectTabbable
@@ -111,118 +128,9 @@ export default function Edit({ attributes, setAttributes }) {
 
             <div {...blockProps}>
                 {attributes.selectedIcon && (
-                    <i className={`amjl-${currentStyleClass} amjl-${baseIcon}`} style={{ fontSize: attributes.iconSize }}></i>
+                    <i className={`amjl-${currentStyleClass} amjl-${baseIcon}`} style={{ fontSize: attributes.iconSize, color: attributes.iconColorSlug ? `var(--wp--preset--color--${attributes.iconColorSlug})` : undefined }}></i>
                 )}
             </div>
-
-            {isModalOpen && (
-                <Modal
-                    title="Select an Icon"
-                    onRequestClose={() => setIsModalOpen(false)}
-                    className="amjl-icon-modal components-modal__content"
-                    style={{ width: '90vw', height: '80vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: 0 }}
-                >
-                    <div style={{ flex: 1, display: 'flex', flexDirection: 'row', height: '100%' }}>
-                        <div className="amjl-sidebar" style={{ flex: '0 0 240px', borderRight: '1px solid #eee', padding: '12px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <RangeControl
-                                label="Preview Size"
-                                value={previewIconSize}
-                                onChange={(value) => setPreviewIconSize(value)}
-                                min={32}
-                                max={96}
-                                step={8}
-                                hideInputField
-                            />
-                            <div style={{
-                                display: 'flex', alignItems: 'center',
-                                background: '#fff', border: '1px solid #ccc',
-                                borderRadius: '2px', padding: '0 8px', height: '30px'
-                            }}>
-                                <Icon icon={search} style={{ marginRight: '6px' }} />
-                                <input
-                                    type="search"
-                                    value={filter}
-                                    onChange={(e) => setFilter(e.target.value)}
-                                    placeholder="Search icons…"
-                                    style={{
-                                        border: 'none', outline: 'none', boxShadow: 'none',
-                                        flex: 1, fontSize: '13px', background: 'transparent'
-                                    }}
-                                />
-                            </div>
-                            <div
-                                role="button"
-                                onClick={() => setIsCategoryPanelOpen(!isCategoryPanelOpen)}
-                                aria-expanded={isCategoryPanelOpen}
-                                style={{
-                                    display: 'flex', alignItems: 'center', gap: '6px',
-                                    fontSize: '13px', fontWeight: 500,
-                                    color: '#1e1e1e', cursor: 'pointer'
-                                }}
-                            >
-                                <Icon icon={isCategoryPanelOpen ? chevronUp : chevronDown} />
-                                <span>Categories</span>
-                            </div>
-                            {isCategoryPanelOpen && (
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                                    {[...new Set(Object.values(icons).flatMap(icon => icon.c || []))].map((cat) => (
-                                        <Button
-                                            key={cat}
-                                            variant={cat === categoryFilter ? 'primary' : 'secondary'}
-                                            onClick={() => setCategoryFilter(cat === categoryFilter ? null : cat)}
-                                        >
-                                            {cat}
-                                        </Button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <div style={{ flex: '1 1 auto', overflowY: 'auto', padding: '20px 12px 0 12px', display: 'grid', gridTemplateColumns: `repeat(auto-fill, minmax(${previewIconSize + 24}px, 1fr))`, gridAutoRows: 'auto', gap: '10px', justifyContent: 'start', alignContent: 'start' }}>
-                            {filteredIcons.map((icon) => {
-                                const iconClassName = `${icon}-${styleFilter}`;
-                                const styleClass = styleClassMap[styleFilter];
-                                const isSelected = tempSelectedIcon === iconClassName;
-                                return (
-                                    <Button
-                                        key={iconClassName}
-                                        onClick={() => setTempSelectedIcon(iconClassName)}
-                                        style={{
-                                            width: '100%',
-                                            height: '100%',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            alignItems: 'center',
-                                            gap: '4px',
-                                            padding: '4px',
-                                            border: isSelected ? '1px solid #007cba' : '1px solid transparent',
-                                            borderRadius: '4px',
-                                            backgroundColor: isSelected ? 'rgba(0, 123, 186, 0.08)' : 'transparent',
-                                            transition: 'border 0.15s ease, background-color 0.15s ease'
-                                        }}
-                                    >
-                                        <i className={`amjl-${styleClass} amjl-${icon}`} style={{ marginTop: '2px', fontSize: `${previewIconSize}px` }}></i>
-                                        <span style={{ fontSize: '10px', textAlign: 'center', marginTop: '6px', lineHeight: '1.1' }}>{icon}</span>
-                                    </Button>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    <div style={{ position: 'sticky', bottom: 0, zIndex: 20, background: '#fff', boxShadow: 'none', padding: '12px', display: 'flex', justifyContent: 'flex-end' }}>
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                setAttributes({ selectedIcon: tempSelectedIcon });
-                                setIsModalOpen(false);
-                            }}
-                            disabled={!tempSelectedIcon}
-                        >
-                            Confirm Selection
-                        </Button>
-                    </div>
-                </Modal>
-            )}
         </>
     );
 }
