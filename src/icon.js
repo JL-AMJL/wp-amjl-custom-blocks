@@ -3,6 +3,8 @@ import edit from '../blocks/icon/edit';
 import save from '../blocks/icon/save';
 import '../blocks/icon/style.scss';
 
+console.log('Icon block loaded!');
+
 registerBlockType('amjl/icon', {
     edit,
     save,

@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "wp-scripts build src/swiper-editor.js src/swiper-frontend.js src/swiper-slide.js src/icon.js",
-    "start": "wp-scripts start src/swiper-editor.js src/swiper-frontend.js src/swiper-slide.js src/icon.js"
+    "build": "wp-scripts build src/swiper-editor.js src/swiper-frontend.js src/swiper-slide.js src/icon.js src/buttons.js src/button-child.js",
+    "start": "wp-scripts start src/swiper-editor.js src/swiper-frontend.js src/swiper-slide.js src/icon.js src/buttons.js src/button-child.js"
   },
   "repository": {
     "type": "git",

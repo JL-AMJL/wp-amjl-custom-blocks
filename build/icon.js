@@ -279,6 +279,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+console.log('Icon block loaded!');
 (0,_wordpress_blocks__WEBPACK_IMPORTED_MODULE_0__.registerBlockType)('amjl/icon', {
   edit: _blocks_icon_edit__WEBPACK_IMPORTED_MODULE_1__["default"],
   save: _blocks_icon_save__WEBPACK_IMPORTED_MODULE_2__["default"]
