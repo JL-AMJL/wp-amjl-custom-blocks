@@ -1,28 +1,25 @@
-@import './libraries/wp-amjl-iconfont.css';
+@use './libraries/wp-amjl-iconfont';
 
+/* ------------------------------------------------------------
+|                     ICON BLOCK STYLES                       |
+ ------------------------------------------------------------ */
+
+/* ----------- MODAL STYLES ------------- */
 .components-modal__content {
 	padding-top: 0 !important;
     padding-bottom: 0 !important;
 }
 
-/* Versteckt das Eingabefeld für die RangeControl im Modal */
 .amjl-icon-modal .components-range-control__number {
 	display: none !important;
 }
 
-/* Standard (Desktop): show sidebar, hide mobile panel */
 .amjl-icon-modal .amjl-filter-panel--mobile {
 	display: none;
 }
 
-/* Mobile: show collapsible filter panel below tabs */
+/* Modal Styles Mobile */
 @media (max-width: 782px) {
-	/*
-    .amjl-icon-modal .amjl-sidebar {
-		display: none !important;
-	}
-    */
-
 	.amjl-icon-modal .amjl-filter-panel--mobile {
 		display: block;
 		padding: 12px;
@@ -32,4 +29,25 @@
 		top: 44px; /* height of tabs */
 		z-index: 15;
 	}
+}
+
+/* ----------- ALIGN STYLES ----------- */
+.wp-block-amjl-icon {
+	text-align: inherit;
+}
+
+.wp-block-amjl-icon.alignleft {
+	text-align: left;
+}
+
+.wp-block-amjl-icon.aligncenter {
+	text-align: center;
+}
+
+.wp-block-amjl-icon.alignright {
+	text-align: right;
+}
+
+.wp-block-amjl-icon i {
+	display: inline-block;
 }

@@ -7,9 +7,14 @@
     "description": "Ein Icon Block mit fontawesome Icons.",
     "keywords": ["icon", "fontawesome"],
     "supports": {
-        "reusable": false
+        "reusable": false,
+        "align": ["left", "center", "right"]
     },
     "attributes": {
+        "align": {
+            "type": "string",
+            "default": "center"
+        },
         "selectedIcon": {
             "type": "string",
             "default": "ice-cream-solid"
@@ -25,6 +30,5 @@
     },
     "textdomain": "wp-amjl-custom-blocks",
     "editorScript": "file:../../build/icon.js",
-    "style": "file:../../build/icon.css",
-    "editorStyle": "file:../../build/style-icon.css"
+    "style": "file:../../build/style-icon.css"
 }

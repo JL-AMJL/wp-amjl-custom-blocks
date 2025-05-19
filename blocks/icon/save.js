@@ -1,7 +1,7 @@
 import { useBlockProps } from '@wordpress/block-editor';
 
 export default function save({ attributes }) {
-    const { selectedIcon, iconSize } = attributes;
+    const { selectedIcon, iconSize, iconColorSlug } = attributes;
 
     const lastDash = selectedIcon?.lastIndexOf('-') ?? -1;
     const baseIcon = selectedIcon?.slice(0, lastDash);
@@ -17,7 +17,7 @@ export default function save({ attributes }) {
         <div {...useBlockProps.save()}>
             {selectedIcon && (
                 <i
-                    className={`amjl-${styleClass} amjl-${baseIcon}`}
+                    className={`amjl-${styleClass} amjl-${baseIcon} has-text-color has-${iconColorSlug}-color`}
                     style={{ fontSize: iconSize }}
                 ></i>
             )}

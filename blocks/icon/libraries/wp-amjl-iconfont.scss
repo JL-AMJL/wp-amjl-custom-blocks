@@ -1,11 +1,12 @@
 
 @font-face {
     font-family: 'amjl-icon-solid';
-    src: url('./fonts/amjl-icon-s.woff2') format('woff2'),
-         url('./fonts/amjl-icon-s.woff') format('woff'),
-         url('./fonts/amjl-icon-s.ttf') format('truetype');
+    src: url('./libraries/fonts/amjl-icon-s.woff2') format('woff2'),
+         url('./libraries/fonts/amjl-icon-s.woff') format('woff'),
+         url('./libraries/fonts/amjl-icon-s.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 .amjl-s {
@@ -23,11 +24,12 @@
 
 @font-face {
     font-family: 'amjl-icon-regular';
-    src: url('./fonts/amjl-icon-r.woff2') format('woff2'),
-         url('./fonts/amjl-icon-r.woff') format('woff'),
-         url('./fonts/amjl-icon-r.ttf') format('truetype');
+    src: url('./libraries/fonts/amjl-icon-r.woff2') format('woff2'),
+         url('./libraries/fonts/amjl-icon-r.woff') format('woff'),
+         url('./libraries/fonts/amjl-icon-r.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 .amjl-r {
@@ -45,11 +47,12 @@
 
 @font-face {
     font-family: 'amjl-icon-brands';
-    src: url('./fonts/amjl-icon-b.woff2') format('woff2'),
-         url('./fonts/amjl-icon-b.woff') format('woff'),
-         url('./fonts/amjl-icon-b.ttf') format('truetype');
+    src: url('./libraries/fonts/amjl-icon-b.woff2') format('woff2'),
+         url('./libraries/fonts/amjl-icon-b.woff') format('woff'),
+         url('./libraries/fonts/amjl-icon-b.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 .amjl-b {
